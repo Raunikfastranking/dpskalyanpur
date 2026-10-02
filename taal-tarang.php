@@ -1,0 +1,249 @@
+<?php
+include "includes/apis.php";
+?>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $language_skill_data['data']['title'] ?? "" ?></title>
+    <meta name="description" content="<?= $language_skill_data['data']['meta_description'] ?? "" ?>">
+    <meta name="keywords" content="<?= $language_skill_data['data']['meta_keywords'] ?? "" ?>">
+    <?php include "includes/head.php" ?>
+</head>
+
+<body>
+
+    <?php include "includes/header.php" ?>
+
+    <div class="main relative">
+        <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px]">
+            <div>
+                <h1
+                    class="text-[32px] sm:hidden block font-[700] text-white text-left pl-4 mb-5 sm:mb-8 hr-line relative leading-9">
+                    Taal, Tarang & Tasveer
+                </h1>
+            </div>
+
+            <div class="md:w-[100%]">
+                <h1
+                    class="sm:text-[32px] sm:block hidden font-[700] text-white text-left sm:mb-1 hr-line relative leading-9 ml-[7rem]">
+                    Taal, Tarang & Tasveer
+                </h1>
+            </div>
+        </div>
+
+        <div class="flex m-5 overflow-x-auto" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                <li class="inline-flex items-center">
+                    <a href="/" class="inline-flex items-center text-[10px] sm:text-[16px] font-medium text-blue-main">
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="rtl:rotate-180 w-3 h-3 text-blue-main mx-1" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 9 4-4-4-4"></path>
+                        </svg>
+                        <p class="ms-1 text-[10px] sm:text-[16px] font-medium text-blue-main">Academics
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="rtl:rotate-180 w-3 h-3 text-blue-main mx-1" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 9 4-4-4-4"></path>
+                        </svg>
+                        <p class="ms-1 text-[10px] sm:text-[16px] font-medium text-blue-main">Facilities
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="rtl:rotate-180 w-3 h-3 text-blue-main mx-1" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 9 4-4-4-4"></path>
+                        </svg>
+                        <p class="ms-1 text-[10px] sm:text-[16px] font-medium text-blue-main">Other Facilities
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="rtl:rotate-180 w-3 h-3 text-blue-main mx-1" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 9 4-4-4-4"></path>
+                        </svg>
+                        <a href="taal-tarang" class="ms-1 text-[10px] sm:text-[16px] font-medium text-blue-main">Taal, Tarang &
+                            Tasveer</a>
+                    </div>
+                </li>
+            </ol>
+        </div>
+
+        <div
+            class="2xl:w-[1280px] lg:w-[1024px] md:w-[767px] sm:w-[640px] sm:mx-auto sm:px-5 mx-3 sm:py-10 py-0 sm:p-20 p-0">
+            <div class="md:flex gap-9 mt-6 mb-10">
+                <div class="md:w-[40%]">
+                    <img src="./assets/images/taal tarang tasveer.webp" alt="" class="w-[100%]">
+                </div>
+                <div class="md:w-[60%]">
+
+                        <p class="text-gray-600">
+                            "Creativity is intelligence having fun." — Albert Einstein <br>
+                            At Delhi Public School, we provide a dynamic and inspiring environment where students are
+                            encouraged to explore their creative potential through <span class="font-[600]"> music,
+                                dance, theatre, and visual arts.</span> Our dedicated arts block is a vibrant space that
+                            fosters imagination, expression, and emotional growth.
+                        </p>
+                        <p class="text-gray-600 mt-4">
+                            We believe that a strong foundation in the arts nurtures confident, thoughtful, and
+                            culturally aware individuals. These creative disciplines are not just extracurricular—they
+                            are integral to our vision of holistic education.
+                        </p>
+                        <p class="text-gray-600 mt-4">
+                            The rhythm of dance, the harmony of music, the drama of theatre, and the colours of visual
+                            art come together to create an atmosphere full of energy and inspiration. It’s a place where
+                            talent is nurtured, passions are discovered, and every student is given the opportunity to
+                            shine beyond the classroom.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php include "includes/footer.php" ?>
+    </div>
+    <?php include "includes/foot.php" ?>
+    <script>
+        $('.moreless-button').click(function () {
+            const moreText = $(this).siblings('.moretext');
+
+            $('.moretext').not(moreText).slideUp();
+            $('.moreless-button').not(this).text('Read more');
+
+            // Toggle the current one
+            moreText.slideToggle();
+
+            if ($(this).text() == "Read more") {
+                $(this).text("Read less");
+            } else {
+                $(this).text("Read more");
+            }
+        });
+
+        var aboutCarousel = new Glide('.about-carousel', {
+            type: 'carousel',
+            focusAt: 1,
+            perView: 4,
+            autoplay: 3500,
+            animationDuration: 700,
+            gap: 24,
+            classes: {
+                activeNav: '[&>*]:bg-slate-700',
+            },
+            breakpoints: {
+                1024: {
+                    perView: 4
+                },
+                640: {
+                    perView: 1
+                }
+            },
+        });
+        aboutCarousel.mount();
+
+        var aboutCarousel2 = new Glide('.about-carousel2', {
+            type: 'carousel',
+            focusAt: 1,
+            perView: 4,
+            autoplay: 3500,
+            animationDuration: 700,
+            gap: 24,
+            classes: {
+                activeNav: '[&>*]:bg-slate-700',
+            },
+            breakpoints: {
+                1680: {
+                    perView: 4
+                },
+                1024: {
+                    perView: 3
+                },
+                820: {
+                    perView: 2
+                },
+                640: {
+                    perView: 1
+                }
+            },
+        });
+        aboutCarousel2.mount();
+
+
+
+
+        var glide03 = new Glide('.glide-03', {
+            type: 'carousel',
+            focusAt: 1,
+            perView: 4,
+            autoplay: 3500,
+            animationDuration: 700,
+            gap: 24,
+            classes: {
+                activeNav: '[&>*]:bg-slate-700',
+            },
+            breakpoints: {
+                1680: {
+                    perView: 4
+                },
+                1024: {
+                    perView: 3
+                },
+                820: {
+                    perView: 2
+                },
+                640: {
+                    perView: 1
+                }
+            },
+        });
+
+        glide03.mount();
+
+        var latestNews2 = new Glide('.latestNews2', {
+            type: 'carousel',
+            focusAt: 1,
+            perView: 4,
+            autoplay: 3500,
+            animationDuration: 700,
+            gap: 24,
+            classes: {
+                activeNav: '[&>*]:bg-slate-700',
+            },
+            breakpoints: {
+                1680: {
+                    perView: 4
+                },
+                1024: {
+                    perView: 3
+                },
+                820: {
+                    perView: 2
+                },
+                640: {
+                    perView: 1
+                }
+            },
+        });
+        latestNews2.mount();
+    </script>
+</body>
+
+</html>

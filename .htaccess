@@ -1,0 +1,86 @@
+RewriteEngine On
+
+<IfModule mod_headers.c>
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+
+# Redirect www to non-www (skip for localhost)
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1) [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+# Redirect all HTTP to HTTPS (skip for localhost)
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1) [NC]
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Redirect .php to clean URL (removes the .php extension) - skip proxy URLs
+RewriteCond %{THE_REQUEST} /([^.]+)\.php [NC]
+RewriteCond %{REQUEST_URI} !/proxy/ [NC]
+RewriteRule ^(.+)\.php$ $1 [R=301,L]
+
+# Canonical: /fee-structure -> CMS slug URL (slug is served via rewrite below)
+RewriteCond %{REQUEST_URI} ^(.*/)fee-structure/?$ [NC]
+RewriteRule ^fee-structure/?$ %1fee-structure-page-kalyanpur [R=301,L]
+
+# Internally rewrite clean URLs to actual .php files (works in subfolders e.g. /dpskalyanpur/page)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+# Friendly URL rewrites
+RewriteRule ^home index.php [NC,L]
+RewriteRule ^blog/([A-Za-z0-9-]+)  detail.php?slug=$1  [NC,L]
+RewriteRule ^view/([A-Za-z0-9-]+)  detail-view.php?slug=$1  [NC,L]
+
+# CMS menu slugs that don't match local filenames -> serve existing pages (URL unchanged)
+RewriteRule ^fee-structure-page-kalyanpur/?$ fee-structure.php [NC,L]
+RewriteRule ^documents-required-dpskalyanpur-admission/?$ admission-procedure.php [NC,L]
+RewriteRule ^annual-magazine/?$ magazine.php [NC,L]
+
+# Enable compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json
+  SetEnvIfNoCase Request_URI \.(?:jpg|jpeg|png|gif|webp|svg|woff2)$ no-gzip dont-vary
+</IfModule>
+
+# Cache control
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"  # Changed from 1 month to 1 year
+  ExpiresByType application/javascript "access plus 1 year"  # Changed from 1 month to 1 year
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType text/html "access plus 1 hour"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Static assets - 1 year cache
+  <FilesMatch "\.(jpg|jpeg|png|webp|svg|css|js|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  
+  # HTML/PHP - 1 hour cache
+  <FilesMatch "\.(html|php)$">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+  </FilesMatch>
+  
+  # Enable ETags
+  Header unset ETag
+  FileETag MTime Size
+</IfModule>
+
+
+<IfModule mod_headers.c>
+    # Defer JavaScript loading
+    <FilesMatch "\.(js)$">
+        Header set Defer "defer"
+    </FilesMatch>
+</IfModule>

@@ -6,9 +6,9 @@ include "includes/apis.php";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $language_skill_data['data']['title'] ?? "" ?></title>
-    <meta name="description" content="<?= $language_skill_data['data']['meta_description'] ?? "" ?>">
-    <meta name="keywords" content="<?= $language_skill_data['data']['meta_keywords'] ?? "" ?>">
+    <title><?= $taal_tarang_data['data']['title'] ?? "" ?></title>
+    <meta name="description" content="<?= $taal_tarang_data['data']['meta_description'] ?? "" ?>">
+    <meta name="keywords" content="<?= $taal_tarang_data['data']['meta_keywords'] ?? "" ?>">
     <?php include "includes/head.php" ?>
 </head>
 
@@ -21,14 +21,14 @@ include "includes/apis.php";
             <div>
                 <h1
                     class="text-[32px] sm:hidden block font-[700] text-white text-left pl-4 mb-5 sm:mb-8 hr-line relative leading-9">
-                    Taal, Tarang & Tasveer
+                    <?= strip_tags($taal_tarang_data['data']['sections'][0]['content_heading'] ?? "") ?>
                 </h1>
             </div>
 
             <div class="md:w-[100%]">
                 <h1
                     class="sm:text-[32px] sm:block hidden font-[700] text-white text-left sm:mb-1 hr-line relative leading-9 ml-[7rem]">
-                    Taal, Tarang & Tasveer
+                    <?= strip_tags($taal_tarang_data['data']['sections'][0]['content_heading'] ?? "") ?>
                 </h1>
             </div>
         </div>
@@ -91,29 +91,11 @@ include "includes/apis.php";
             class="2xl:w-[1280px] lg:w-[1024px] md:w-[767px] sm:w-[640px] sm:mx-auto sm:px-5 mx-3 sm:py-10 py-0 sm:p-20 p-0">
             <div class="md:flex gap-9 mt-6 mb-10">
                 <div class="md:w-[40%]">
-                    <img src="./assets/images/taal tarang tasveer.webp" alt="" class="w-[100%]">
+                    <img src="<?= $taal_tarang_data['data']['sections'][1]['columns'][0]['image_url'] ?? "" ?>" alt="<?= ms_esc_image_alt($taal_tarang_data['data']['sections'][1]['columns'][0] ?? [], '') ?>" class="w-[100%]">
                 </div>
                 <div class="md:w-[60%]">
-
-                        <p class="text-gray-600">
-                            "Creativity is intelligence having fun." — Albert Einstein <br>
-                            At Delhi Public School, we provide a dynamic and inspiring environment where students are
-                            encouraged to explore their creative potential through <span class="font-[600]"> music,
-                                dance, theatre, and visual arts.</span> Our dedicated arts block is a vibrant space that
-                            fosters imagination, expression, and emotional growth.
-                        </p>
-                        <p class="text-gray-600 mt-4">
-                            We believe that a strong foundation in the arts nurtures confident, thoughtful, and
-                            culturally aware individuals. These creative disciplines are not just extracurricular—they
-                            are integral to our vision of holistic education.
-                        </p>
-                        <p class="text-gray-600 mt-4">
-                            The rhythm of dance, the harmony of music, the drama of theatre, and the colours of visual
-                            art come together to create an atmosphere full of energy and inspiration. It’s a place where
-                            talent is nurtured, passions are discovered, and every student is given the opportunity to
-                            shine beyond the classroom.
-                        </p>
-                    </div>
+                    <?= $taal_tarang_data['data']['sections'][1]['columns'][1]['content'] ?? "" ?>
+                </div>
                 </div>
             </div>
         </div>

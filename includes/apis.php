@@ -6,6 +6,16 @@ require_once dirname(__DIR__) . '/proxy/config.php';
 
 $api_url = "https://dps.allenhouseschools.com";
 
+// CMS content embeds media as relative /upload/... paths — rewrite to absolute CMS host
+// so images/files resolve on any frontend domain (local dev, production, etc.).
+ob_start(function (string $html) use ($api_url): string {
+    return str_replace(
+        ['src="/upload/', "src='/upload/", 'href="/upload/', "href='/upload/"],
+        ['src="' . $api_url . '/upload/', "src='" . $api_url . "/upload/", 'href="' . $api_url . '/upload/', "href='" . $api_url . "/upload/"],
+        $html
+    );
+});
+
 /** Match `/galleries/type/achievements/branch/{id}` — used by year filter + pagination (`/api/galleries/branch/{id}/year/{year}`). */
 if (!defined('DPS_KALYANPUR_GALLERY_BRANCH_ID')) {
     define('DPS_KALYANPUR_GALLERY_BRANCH_ID', DPS_KALYANPUR_BRANCH_ID);

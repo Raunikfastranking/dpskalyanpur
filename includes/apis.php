@@ -6,6 +6,16 @@ require_once dirname(__DIR__) . '/proxy/config.php';
 
 $api_url = "https://dps.allenhouseschools.com";
 
+// CMS content embeds media as relative /upload/... paths — rewrite to absolute CMS host
+// so images/files resolve on any frontend domain (local dev, production, etc.).
+ob_start(function (string $html) use ($api_url): string {
+    return str_replace(
+        ['src="/upload/', "src='/upload/", 'href="/upload/', "href='/upload/"],
+        ['src="' . $api_url . '/upload/', "src='" . $api_url . "/upload/", 'href="' . $api_url . '/upload/', "href='" . $api_url . "/upload/"],
+        $html
+    );
+});
+
 /** Match `/galleries/type/achievements/branch/{id}` — used by year filter + pagination (`/api/galleries/branch/{id}/year/{year}`). */
 if (!defined('DPS_KALYANPUR_GALLERY_BRANCH_ID')) {
     define('DPS_KALYANPUR_GALLERY_BRANCH_ID', DPS_KALYANPUR_BRANCH_ID);
@@ -24,6 +34,8 @@ function fetchMultipleApiData($endpoints)
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // disable SSL check if needed
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
         curl_setopt($ch, CURLOPT_HTTPHEADER, api_auth_headers());
         curl_multi_add_handle($mh, $ch);
         $curlHandles[$key] = $ch;
@@ -187,7 +199,78 @@ $endpoints = [
 
 ];
 
-$data = fetchMultipleApiData($endpoints);
+$cacheFile = __DIR__ . '/cache/api_data.ser';
+$cacheTtl  = 1800; // 30 minutes — ?clear_cache= se kabhi bhi turant refresh ho jata hai
+
+// Purana JSON cache file ho to delete karo (ek baar ki migration)
+if (file_exists(__DIR__ . '/cache/api_data.json')) {
+    @unlink(__DIR__ . '/cache/api_data.json');
+}
+
+// Secret URL se cache turant clear — CMS update ke baad turant reflect ke liye
+// Usage: https://dpskalyanpur.com/?clear_cache=DpsK@2026ClearKey
+if (($_GET['clear_cache'] ?? '') === 'DpsK@2026ClearKey') {
+    @unlink($cacheFile);
+}
+
+if (!function_exists('dps_api_cache_save')) {
+    function dps_api_cache_save(string $cacheFile, array $data): void
+    {
+        if (!is_dir(dirname($cacheFile))) {
+            mkdir(dirname($cacheFile), 0755, true);
+        }
+        $tmpFile = $cacheFile . '.tmp';
+        file_put_contents($tmpFile, serialize($data), LOCK_EX);
+        if (!@rename($tmpFile, $cacheFile)) {
+            @file_put_contents($cacheFile, serialize($data), LOCK_EX);
+            @unlink($tmpFile);
+        }
+    }
+}
+
+if (!function_exists('dps_api_cache_read')) {
+    function dps_api_cache_read(string $cacheFile)
+    {
+        if (!file_exists($cacheFile)) {
+            return null;
+        }
+        $data = @unserialize(file_get_contents($cacheFile));
+        return (is_array($data) && !empty($data)) ? $data : null;
+    }
+}
+
+$data = dps_api_cache_read($cacheFile);
+
+if ($data !== null && (time() - @filemtime($cacheFile)) >= $cacheTtl) {
+    // Cache stale hai — visitor ko turant purana data serve karo,
+    // page render/send hone ke BAAD background me refresh hoga
+    register_shutdown_function(function () use ($cacheFile, $endpoints) {
+        $lockFile = $cacheFile . '.lock';
+        if (file_exists($lockFile) && (time() - filemtime($lockFile)) < 60) {
+            return; // koi aur request already refresh kar rahi hai
+        }
+        @touch($lockFile);
+        ignore_user_abort(true);
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+        $fresh = fetchMultipleApiData($endpoints);
+        if (is_array($fresh) && !empty($fresh)) {
+            dps_api_cache_save($cacheFile, $fresh);
+        }
+        @unlink($lockFile);
+    });
+}
+
+if ($data === null) {
+    // Cache bilkul nahi hai (pehli baar ya clear-cache ke baad) — tabhi foreground fetch
+    $data = fetchMultipleApiData($endpoints);
+    if (is_array($data) && !empty($data)) {
+        dps_api_cache_save($cacheFile, $data);
+    } else {
+        $data = [];
+    }
+}
 $home_data   = $data['home_data'];
 $flyer_data = $data['flyer_data'];
 $menu_data = $data['menu_data'];

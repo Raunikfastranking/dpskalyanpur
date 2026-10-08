@@ -80,7 +80,9 @@ include "includes/apis.php";
 
              <div class="md:flex gap-9 mt-6 mb-10">
                 <div class="md:w-[40%]">
-                    <img src="<?= $society_data['data']['sections'][1]['columns'][0]['image_url'] ?? "" ?>" alt="<?= ms_esc_image_alt($society_data['data']['sections'][1]['columns'][0] ?? [], 'DPS Society Image') ?>" class="mx-auto">
+                    <?php if (!empty($society_data['data']['sections'][1]['columns'][0]['image_url'])): ?>
+                    <img src="<?= $society_data['data']['sections'][1]['columns'][0]['image_url'] ?>" alt="<?= ms_esc_image_alt($society_data['data']['sections'][1]['columns'][0] ?? [], 'DPS Society Image') ?>" class="mx-auto">
+                    <?php endif; ?>
                 </div>
                 <div class="md:w-[60%]">
                       <?= $society_data['data']['sections'][1]['columns'][1]['content'] ?? "" ?>

@@ -58,7 +58,7 @@ RewriteRule ^annual-magazine/?$ magazine.php [NC,L]
   ExpiresByType text/css "access plus 1 year"  # Changed from 1 month to 1 year
   ExpiresByType application/javascript "access plus 1 year"  # Changed from 1 month to 1 year
   ExpiresByType font/woff2 "access plus 1 year"
-  ExpiresByType text/html "access plus 1 hour"
+  ExpiresByType text/html "access plus 0 seconds"
 </IfModule>
 
 <IfModule mod_headers.c>
@@ -67,9 +67,9 @@ RewriteRule ^annual-magazine/?$ magazine.php [NC,L]
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
   
-  # HTML/PHP - 1 hour cache
+  # HTML/PHP - no browser cache (CMS updates turant dikhne ke liye)
   <FilesMatch "\.(html|php)$">
-    Header set Cache-Control "public, max-age=3600, must-revalidate"
+    Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
   
   # Enable ETags

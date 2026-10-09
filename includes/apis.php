@@ -8,13 +8,14 @@ $api_url = "https://dps.allenhouseschools.com";
 
 // CMS content embeds media as relative /upload/... paths — rewrite to absolute CMS host
 // so images/files resolve on any frontend domain (local dev, production, etc.).
-ob_start(function (string $html) use ($api_url): string {
+$dpsRewriteUploadUrls = function (string $html) use ($api_url): string {
     return str_replace(
         ['src="/upload/', "src='/upload/", 'href="/upload/', "href='/upload/"],
         ['src="' . $api_url . '/upload/', "src='" . $api_url . "/upload/", 'href="' . $api_url . '/upload/', "href='" . $api_url . "/upload/"],
         $html
     );
-});
+};
+ob_start($dpsRewriteUploadUrls);
 
 /** Match `/galleries/type/achievements/branch/{id}` — used by year filter + pagination (`/api/galleries/branch/{id}/year/{year}`). */
 if (!defined('DPS_KALYANPUR_GALLERY_BRANCH_ID')) {
@@ -200,9 +201,9 @@ $endpoints = [
 ];
 
 $cacheFile = __DIR__ . '/cache/api_data.ser';
-$cacheTtl  = 1800; // 30 minutes — ?clear_cache= se kabhi bhi turant refresh ho jata hai
+$cacheTtl  = 5; 
 
-// Purana JSON cache file ho to delete karo (ek baar ki migration)
+
 if (file_exists(__DIR__ . '/cache/api_data.json')) {
     @unlink(__DIR__ . '/cache/api_data.json');
 }
@@ -234,28 +235,97 @@ if (!function_exists('dps_api_cache_read')) {
         if (!file_exists($cacheFile)) {
             return null;
         }
-        $data = @unserialize(file_get_contents($cacheFile));
-        return (is_array($data) && !empty($data)) ? $data : null;
+        // Writer LOCK_EX rakhta hai — LOCK_SH se mid-write partial read avoid hota hai
+        // (bina lock ke 21MB file ka truncated read -> unserialize fail -> bekaar foreground fetch)
+        for ($attempt = 0; $attempt < 3; $attempt++) {
+            $fh = @fopen($cacheFile, 'rb');
+            if ($fh === false) {
+                return null;
+            }
+            @flock($fh, LOCK_SH);
+            $raw = stream_get_contents($fh);
+            @flock($fh, LOCK_UN);
+            fclose($fh);
+            $data = @unserialize($raw === false ? '' : $raw);
+            if (is_array($data) && !empty($data)) {
+                return $data;
+            }
+            usleep(150000); // write/rename window me aaye ho sakte hain — thoda wait karke retry
+        }
+        return null;
     }
 }
 
 $data = dps_api_cache_read($cacheFile);
 
-if ($data !== null && (time() - @filemtime($cacheFile)) >= $cacheTtl) {
-    // Cache stale hai — visitor ko turant purana data serve karo,
-    // page render/send hone ke BAAD background me refresh hoga
-    register_shutdown_function(function () use ($cacheFile, $endpoints) {
+if (PHP_SAPI !== 'cli' && $data !== null && (time() - @filemtime($cacheFile)) >= $cacheTtl) {
+    // Cache stale hai — visitor ko cached page serve karo aur refresh ko
+    // alag detached PHP process me daal do, taake request/server block na ho
+    register_shutdown_function(function () use ($cacheFile, $endpoints, $dpsRewriteUploadUrls, $data) {
         $lockFile = $cacheFile . '.lock';
         if (file_exists($lockFile) && (time() - filemtime($lockFile)) < 60) {
-            return; // koi aur request already refresh kar rahi hai
+            return; // koi aur request already refresh trigger kar chuki hai
         }
         @touch($lockFile);
         ignore_user_abort(true);
+
+        // Refresh alag background process me — request turant khatam, server free
+        $isWin  = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        $phpBin = PHP_BINDIR . DIRECTORY_SEPARATOR . ($isWin ? 'php.exe' : 'php');
+        if (!is_file($phpBin)) {
+            $phpBin = PHP_BINARY; // Apache mod_php me PHP_BINARY httpd ho sakta hai, isliye BINDIR pehle
+        }
+        $worker  = __DIR__ . '/api-refresh.php';
+        $spawned = false;
+        if ($isWin && function_exists('popen')) {
+            // > NUL zaroori hai warna pclose child ke exit ka wait karega
+            pclose(popen('start /B "" "' . $phpBin . '" "' . $worker . '" > NUL 2>&1', 'r'));
+            $spawned = true;
+        } elseif (!$isWin && function_exists('exec')) {
+            exec('nohup ' . escapeshellarg($phpBin) . ' ' . escapeshellarg($worker) . ' > /dev/null 2>&1 &');
+            $spawned = true;
+        }
+        if ($spawned) {
+            return; // worker process fetch + save + lock-unlink karega
+        }
+
+        // Fallback: spawn possible nahi (exec/popen disabled) — inline refresh,
+        // response pehle client ko bhej ke
         if (function_exists('fastcgi_finish_request')) {
-            fastcgi_finish_request();
+            fastcgi_finish_request(); // PHP-FPM
+        } else {
+            // php -S / Apache mod_php: Content-Length + Connection: close se
+            // response turant complete declare karo
+            if (function_exists('apache_setenv')) {
+                @apache_setenv('no-gzip', '1');
+            }
+            @ini_set('zlib.output_compression', 'Off');
+            $html = '';
+            while (ob_get_level() > 0) {
+                $buf = ob_get_clean();
+                if ($buf === false) {
+                    break; // non-removable buffer — aage pop nahi kar sakte
+                }
+                $html = $buf . $html;
+            }
+            $html = $dpsRewriteUploadUrls($html);
+            if (!headers_sent()) {
+                header('Connection: close');
+                header('Content-Encoding: none');
+                header('Content-Length: ' . strlen($html));
+            }
+            echo $html;
+            @flush();
         }
         $fresh = fetchMultipleApiData($endpoints);
-        if (is_array($fresh) && !empty($fresh)) {
+        // CMS down/fail ho to nulls cache me mat likho — purana cache serve karte raho
+        if (is_array($fresh) && !empty(array_filter($fresh))) {
+            // Jis endpoint ka fetch fail hua (null), uske liye purana cached data retain karo
+            foreach ($fresh as $key => $value) {
+                if ($value === null && isset($data[$key])) {
+                    $fresh[$key] = $data[$key];
+                }
+            }
             dps_api_cache_save($cacheFile, $fresh);
         }
         @unlink($lockFile);
@@ -265,7 +335,7 @@ if ($data !== null && (time() - @filemtime($cacheFile)) >= $cacheTtl) {
 if ($data === null) {
     // Cache bilkul nahi hai (pehli baar ya clear-cache ke baad) — tabhi foreground fetch
     $data = fetchMultipleApiData($endpoints);
-    if (is_array($data) && !empty($data)) {
+    if (is_array($data) && !empty(array_filter($data))) {
         dps_api_cache_save($cacheFile, $data);
     } else {
         $data = [];

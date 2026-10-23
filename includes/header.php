@@ -33,6 +33,7 @@ $pageDataMap = [
     "foundational-wing-faculty" =>  $foundational_data,
     "music-dance-department" => $music_data,
     "preparatory-stage" => $preparatory_data,
+    "foundational-stage" => $foundational_stage_data,
     "middle-stage" => $middle_stage_data,
     "secondary-stage" => $secondary_stage_data,
     "senior-secondary-stage" => $sr_secondary_stage_data,

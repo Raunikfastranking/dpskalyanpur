@@ -943,7 +943,7 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
 
                     <div class="2xl:w-[1280px] lg:w-[1024px] md:w-[767px] sm:w-[640px] sm:mx-auto sm:px-5 mx-3 px-3">
 
-                        <div class="relative  sm:pt-5 pt-2 ">
+                        <div class="relative  sm:pt-5 pt-2 opne-hide-circle">
 
                             <!-- <ul class="tabs 2xl:ml-[432px] md:ml-[298px]  ml-[6px]">
                                 <li class="tab-link current" data-tab="tab-1">Image Testimonials</li>
@@ -1023,6 +1023,20 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
 
 
                                     </ul>
+                                </div>
+                                <!-- Controls -->
+                                <div class="absolute left-0 items-center justify-between w-full h-0 px-4 top-1/2 hide-circle hidden md:flex"
+                                    data-glide-el="controls">
+                                    <button
+                                        class="inline-flex items-center justify-center relative right-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
+                                        data-glide-dir="<" aria-label="prev slide">
+                                        <i class="fa-solid fa-angle-left text-[#005224]"></i>
+                                    </button>
+                                    <button
+                                        class="inline-flex items-center justify-center relative left-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
+                                        data-glide-dir=">" aria-label="next slide">
+                                        <i class="fa-solid fa-angle-right text-[#005224]"></i>
+                                    </button>
                                 </div>
                             </div>
 

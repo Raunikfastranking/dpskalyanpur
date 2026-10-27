@@ -1,5 +1,78 @@
 
-
+<style id="critical-nav-css">
+  .hidden { display: none !important; }
+  .flex { display: flex; }
+  .block { display: block; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .justify-end { justify-content: flex-end; }
+  .flex-col { flex-direction: column; }
+  .gap-1 { gap: 0.25rem; }
+  .gap-2 { gap: 0.5rem; }
+  .gap-4 { gap: 1rem; }
+  .text-white { color: #fff; }
+  .no-underline { text-decoration: none; }
+  .whitespace-nowrap { white-space: nowrap; }
+  .overflow-hidden { overflow: hidden; }
+  .overflow-x-auto { overflow-x: auto; }
+  .list-none { list-style: none; margin: 0; padding: 0; }
+  #esuccessPopup.hidden,
+  #popupForm.hidden { display: none !important; }
+  @media (min-width: 640px) {
+    .sm\:block { display: block !important; }
+    .sm\:hidden { display: none !important; }
+  }
+  @media (min-width: 1024px) {
+    .lg\:flex { display: flex !important; }
+    .lg\:hidden { display: none !important; }
+  }
+  .nav-menu-checkbox,
+  .mobile-nav-backdrop,
+  .NavMenuLogo,
+  .bartoggle { display: none; }
+  header nav { display: flex; align-items: center; justify-content: space-between; }
+  header nav .logo ul,
+  header nav .logo + div > ul { list-style: none; margin: 0; padding: 0; }
+  .NavMenu { list-style: none; margin: 0; padding: 0; display: flex; justify-content: flex-end; }
+  .NavMenu > li { display: inline-block; }
+  .NavMenu ul.dps-submenu { display: none; list-style: none; margin: 0; padding: 0; }
+  .NavMenu ul.dps-submenu.is-open { display: flex; flex-direction: column; }
+  @media (min-width: 1101px) {
+    .mobile-nav-panel { display: contents; }
+    .NavMenu ul.dps-submenu {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      visibility: hidden;
+      opacity: 0;
+    }
+  }
+  @media (max-width: 1100px) {
+    .bartoggle { display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .mobile-nav-panel {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: min(500px, 100%);
+      height: 100vh;
+      height: 100dvh;
+      transform: translateX(-100%);
+      overflow: hidden;
+      z-index: 10001;
+      background: #003618;
+    }
+    .NavMenuLogo { display: flex; }
+    .NavMenu {
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-y: auto;
+    }
+    .NavMenu > li { display: block; width: 100%; }
+  }
+</style>
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+<script src="assets/js/tailwind.js"></script>
 
 <!-- Google Tag Manager -->
 <script>
@@ -10,11 +83,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-PGPM9GFR');
 </script>
 <!-- End Google Tag Manager -->
-
-<!-- <script src="https://cdn.tailwindcss.com"></script> -->
-<script src="assets/js/tailwind.js"></script>
-<link rel="preload" href="assets/css/styles.css" as="style" onload="this.rel='stylesheet'">
-<link rel="preload" href="assets/css/responsive.css" as="style" onload="this.rel='stylesheet'">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 

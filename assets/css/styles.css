@@ -580,14 +580,6 @@ nav .nav-content .links {
     background-size: cover
 }
 
-@media (max-width:768px) {
-
-    .dps-menu-open.hidden-menu,
-    .dps-menu-openss.hidden-menu,
-    .dps-menu-opensss.hidden-menu {
-        display: flex
-    }
-}
 
 .custom-container-1450 {
     max-width: 1450;

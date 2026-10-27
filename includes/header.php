@@ -160,10 +160,7 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
         Enquire Now
     </a>
 </div>
-<div id="esuccessPopup" class="relative fixed  bg-green-500 text-white px-4 py-2 rounded mb-5 hidden" style="z-index:9999;
-    position: fixed;
-    right: 0;
-    top: 20%;">
+<div id="esuccessPopup" class="hidden bg-green-500 text-white px-4 py-2 rounded mb-5" style="z-index:9999;position:fixed;right:0;top:20%;">
     Form submitted successfully!
 </div>
 <div id="popupForm" class="fixed inset-0 bg-black/60 flex items-start md:items-center justify-center z-[9998] overflow-y-auto hidden">
@@ -515,11 +512,15 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
 <?php
 $menu_data = $menu_data['data']['menu_items'] ?? [];
 
-function renderMenu($items, $isSub = false)
+function renderMenu($items, $depth = 0)
 {
     if (empty($items)) return;
 
-    echo $isSub ? '<ul class="dps-menu-open">' : '<ul class="NavMenu MobileNav" id="NavMenu">';
+    if ($depth === 0) {
+        echo '<ul class="NavMenu MobileNav" id="NavMenu">';
+    } else {
+        echo '<ul class="dps-submenu" data-depth="' . (int) $depth . '">';
+    }
 
     foreach ($items as $item) {
         $hasChildren = !empty($item['descendants']);
@@ -548,22 +549,16 @@ function renderMenu($items, $isSub = false)
         echo '<li>';
 
         if ($hasChildren) {
-            // Parent menu with arrow & toggle
-            echo '<a class="hover:text-[#FED72B] dps-menu-toggle flex items-center gap-2 group">';
-            echo htmlspecialchars($name);
-
-            // ▼ arrow icon
+            echo '<a href="#" role="button" aria-expanded="false" class="hover:text-[#FED72B] dps-menu-toggle flex items-center justify-between gap-2 group">';
+            echo '<span>' . htmlspecialchars($name) . '</span>';
             echo '<svg width="8" height="5" viewBox="0 0 8 5" xmlns="http://www.w3.org/2000/svg" 
-                     class="transition fill-white lg:fill-black group-hover:fill-[#FED72B]">
+                     class="dps-menu-chevron shrink-0 transition fill-white lg:fill-black group-hover:fill-[#FED72B]" aria-hidden="true">
                       <path fill-rule="evenodd" clip-rule="evenodd"
                         d="M0.699203 0.281451C0.825931 0.154761 0.997788 0.0835904 1.17698 0.0835904C1.35617 0.0835904 1.52803 0.154761 1.65476 0.281451L3.88011 2.5068L6.10546 0.281451C6.1678 0.216906 6.24237 0.165424 6.32482 0.130007C6.40727 0.0945895 6.49594 0.0759472 6.58567 0.0751674C6.6754 0.0743877 6.76439 0.091486 6.84744 0.125465C6.93049 0.159444 7.00595 0.209623 7.0694 0.273074C7.13285 0.336525 7.18303 0.411978 7.21701 0.495029C7.25099 0.57808 7.26808 0.667067 7.2673 0.756797C7.26652 0.846527 7.24788 0.935203 7.21246 1.01765C7.17705 1.1001 7.12557 1.17467 7.06102 1.23701L4.35789 3.94014C4.23116 4.06683 4.0593 4.138 3.88011 4.138C3.70092 4.138 3.52906 4.06683 3.40233 3.94014L0.699203 1.23701C0.572513 1.11028 0.501343 0.938422 0.501343 0.759229C0.501343 0.580035 0.572513 0.408179 0.699203 0.281451Z"/>
                   </svg>';
             echo '</a>';
-
-            // Render children recursively
-            renderMenu($item['descendants'], true);
+            renderMenu($item['descendants'], $depth + 1);
         } else {
-            // Normal menu link
             echo '<a href="' . htmlspecialchars($fullUrl, ENT_QUOTES) . '" target="' . $target . '" class="hover:text-[#FED72B]">';
             echo htmlspecialchars($name);
             echo '</a>';
@@ -581,22 +576,23 @@ function renderMenu($items, $isSub = false)
         <div class="logo">
             <a href="/"><img src="https://myschool-assets.s3.ap-south-1.amazonaws.com/uploads/AONKJFjio6pQUZ1wq39Fg5T483Hp1HBsRNqOkvDI.png" class="w-44" alt=""></a>
         </div>
-        <label for="menubrop" class="bartoggle">≡</label>
-        <div class="onMobileEffect" id="onMobileEffect" style="transform: translateX(-100%);">
-            <input type="checkbox" id="menubrop">
+        <label for="menubrop" class="bartoggle" aria-label="Open menu">≡</label>
+        <input type="checkbox" id="menubrop" class="nav-menu-checkbox" aria-hidden="true">
+        <label for="menubrop" class="mobile-nav-backdrop" aria-hidden="true"></label>
+        <div class="mobile-nav-panel" id="mobileNavPanel">
             <div class="NavMenuLogo bg-white py-5 justify-between px-2">
                 <a href="/">
                     <img src="https://myschool-assets.s3.ap-south-1.amazonaws.com/uploads/AONKJFjio6pQUZ1wq39Fg5T483Hp1HBsRNqOkvDI.png" class="w-[200px]" alt="">
                 </a>
-                <button id="closeMenu">
+                <button type="button" id="closeMenu" aria-label="Close menu">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32">
                         <path fill="#f11e1e"
                             d="M16 2C8.2 2 2 8.2 2 16s6.2 14 14 14s14-6.2 14-14S23.8 2 16 2m5.4 21L16 17.6L10.6 23L9 21.4l5.4-5.4L9 10.6L10.6 9l5.4 5.4L21.4 9l1.6 1.6l-5.4 5.4l5.4 5.4z" />
                     </svg>
                 </button>
             </div>
+            <?php renderMenu($menu_data); ?>
         </div>
-        <?php renderMenu($menu_data); ?>
 
         <div class="sm:ml-12 sm:mt-[-1px] mt-5 ml-5 desktopEnquiry">
             <button onclick="openPopup()" id="openPopupDesktop" class="px-4 py-2 bg-blue-main text-white ">Enquiry Form</button>

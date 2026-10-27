@@ -709,33 +709,43 @@ const submitBtn = document.getElementById("submitBtn");
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    document.querySelectorAll('.dps-menu-toggle').forEach(function(toggle) {
-      toggle.addEventListener('click', function() {
-        const submenu = this.nextElementSibling;
-        if (submenu && submenu.classList.contains('dps-menu-open')) {
-          submenu.classList.toggle('hidden-menu');
+    var menuCheckbox = document.getElementById("menubrop");
+    var closeMenuBtn = document.getElementById("closeMenu");
+
+    function closeMobileNav() {
+      if (menuCheckbox) {
+        menuCheckbox.checked = false;
+      }
+    }
+
+    if (closeMenuBtn) {
+      closeMenuBtn.addEventListener("click", closeMobileNav);
+    }
+
+    document.querySelectorAll(".NavMenu a[href]:not([href='#'])").forEach(function(link) {
+      link.addEventListener("click", function() {
+        if (window.matchMedia("(max-width: 1100px)").matches) {
+          closeMobileNav();
         }
       });
     });
 
-    document.querySelectorAll('.dps2').forEach(function(toggle) {
-      toggle.addEventListener('click', function() {
-        const submenu = this.nextElementSibling;
-        if (submenu && submenu.classList.contains('dps-menu-openss')) {
-          submenu.classList.toggle('hidden-menu');
+    document.querySelectorAll(".dps-menu-toggle").forEach(function(toggle) {
+      toggle.addEventListener("click", function(e) {
+        e.preventDefault();
+        if (!window.matchMedia("(max-width: 1100px)").matches) {
+          return;
         }
+        var submenu = this.nextElementSibling;
+        if (!submenu || !submenu.classList.contains("dps-submenu")) {
+          return;
+        }
+        var willOpen = !submenu.classList.contains("is-open");
+        submenu.classList.toggle("is-open", willOpen);
+        this.classList.toggle("is-open", willOpen);
+        this.setAttribute("aria-expanded", willOpen ? "true" : "false");
       });
     });
-
-    document.querySelectorAll('.dps3').forEach(function(toggle) {
-      toggle.addEventListener('click', function() {
-        const submenu = this.nextElementSibling;
-        if (submenu && submenu.classList.contains('dps-menu-opensss')) {
-          submenu.classList.toggle('hidden-menu');
-        }
-      });
-    });
-
   });
 </script>
 

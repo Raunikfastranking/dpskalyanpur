@@ -964,6 +964,8 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
 
 
     <?php
+    $videoSectionContent = $home_data['data']['sections'][7]['content'] ?? '';
+    $videoSectionHasImage = preg_match('/<img\b/i', $videoSectionContent) === 1;
     $video_data = $home_data['data']['sections'][7]['resolved_content']['media'][0]['media_url'] ?? '';
     $embedUrl = '';
     if (!empty($video_data)) {
@@ -981,12 +983,33 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
         }
     }
     ?>
-    <div class="sm:mt-[100px] mt-10">
+    <style>
+        .home-video-section .o-video.has-image {
+            height: auto;
+            padding-bottom: 0;
+        }
+
+        .home-video-section .o-video.has-image p {
+            margin: 0;
+        }
+
+        .home-video-section .o-video.has-image img {
+            display: block;
+            position: static;
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 0.75rem;
+        }
+    </style>
+    <div class="home-video-section sm:mt-[100px] mt-10">
         <div class="2xl:w-[1280px] lg:w-[1024px] md:w-[767px] sm:w-[640px] sm:mx-auto ">
 
             <div class="relative ">
-                <div class="o-video mx-auto">
-                    <?php if (!empty($embedUrl)): ?>
+                <div class="o-video mx-auto <?= $videoSectionHasImage ? 'has-image' : '' ?>">
+                    <?php if ($videoSectionHasImage): ?>
+                        <?= $videoSectionContent ?>
+                    <?php elseif (!empty($embedUrl)): ?>
                         <iframe class="w-full h-full rounded-xl"
                             src="<?php echo htmlspecialchars($embedUrl); ?>"
                             title="YouTube video" frameborder="0"

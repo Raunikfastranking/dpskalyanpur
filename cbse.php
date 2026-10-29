@@ -84,7 +84,7 @@ usort($cbseGalleries, function ($a, $b) {
                         <svg class="rtl:rotate-180 w-3 h-3 text-blue-main mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                         </svg>
-                        <a href="cbse-gallery" class="ms-1 sm:text-sm text-xs font-medium text-blue-main">
+                        <a href="cbse" class="ms-1 sm:text-sm text-xs font-medium text-blue-main">
                             <?= htmlspecialchars(strip_tags($cbse_data['data']['sections'][0]['content_heading'] ?? 'CBSE Gallery')) ?>
                         </a>
                     </div>

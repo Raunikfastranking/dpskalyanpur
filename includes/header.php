@@ -335,30 +335,45 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
     </div>
 </div>
 
-<div class="bg-blue-main p-2 px-10 lg:flex hidden justify-between items-center text-[12px]">
+<?php
+$headerPhoneNumbers = preg_split(
+    '/\s*[,;|]\s*/',
+    $header_footer_data[0]['meta_data']['phones'] ?? '',
+    -1,
+    PREG_SPLIT_NO_EMPTY
+);
+$headerPhoneNumbers = array_values(array_filter(array_map('trim', $headerPhoneNumbers)));
+?>
+
+<div class="bg-blue-main p-2 px-10 lg:flex hidden justify-between items-center gap-4 text-[12px]">
 
 
-    <div class="sm:w-[10%]">
-        <a href="tel:<?= $header_footer_data[0]['meta_data']['phones'] ?? "" ?>" class="gap-1 flex items-center text-white transition-all  whitespace-nowrap">
+    <div class="w-max shrink-0 flex items-center gap-1">
+        <a href="tel:<?= htmlspecialchars(preg_replace('/[^\d+]/', '', $headerPhoneNumbers[0] ?? ''), ENT_QUOTES, 'UTF-8') ?>" class="flex items-center text-white transition-all whitespace-nowrap">
             <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M17.7875 19.5793C15.8778 19.5793 13.991 19.1631 12.1271 18.3308C10.2632 17.4985 8.56736 16.3181 7.03958 14.7897C5.51181 13.2613 4.33175 11.5655 3.49942 9.7022C2.66708 7.83892 2.25061 5.95212 2.25 4.04178C2.25 3.76678 2.34167 3.53762 2.525 3.35428C2.70833 3.17095 2.9375 3.07928 3.2125 3.07928H6.925C7.13889 3.07928 7.32986 3.15201 7.49792 3.29745C7.66597 3.4429 7.76528 3.61462 7.79583 3.81262L8.39167 7.02095C8.42222 7.2654 8.41458 7.47165 8.36875 7.6397C8.32292 7.80776 8.23889 7.9529 8.11667 8.07512L5.89375 10.321C6.19931 10.8862 6.562 11.4323 6.98183 11.959C7.40167 12.4858 7.86397 12.994 8.36875 13.4835C8.84236 13.9571 9.33889 14.3965 9.85833 14.8016C10.3778 15.2068 10.9278 15.5771 11.5083 15.9126L13.6625 13.7585C13.8 13.621 13.9797 13.518 14.2015 13.4495C14.4233 13.3811 14.6409 13.3618 14.8542 13.3918L18.0167 14.0335C18.2306 14.0946 18.4062 14.2055 18.5438 14.3662C18.6812 14.5269 18.75 14.7063 18.75 14.9043V18.6168C18.75 18.8918 18.6583 19.121 18.475 19.3043C18.2917 19.4876 18.0625 19.5793 17.7875 19.5793Z"
                     class="fill-white transition-all group-hover:fill-red-500" fill="white" />
             </svg>
-            <?= $header_footer_data[0]['meta_data']['phones'] ?? "" ?>
         </a>
+        <div class="flex items-center gap-1 whitespace-nowrap text-white">
+            <?php foreach ($headerPhoneNumbers as $index => $phone): ?>
+                <?php if ($index > 0): ?><span aria-hidden="true">,</span><?php endif; ?>
+                <a href="tel:<?= htmlspecialchars(preg_replace('/[^\d+]/', '', $phone), ENT_QUOTES, 'UTF-8') ?>" class="text-white transition-all"><?= htmlspecialchars($phone, ENT_QUOTES, 'UTF-8') ?></a>
+            <?php endforeach; ?>
+        </div>
     </div>
 
-    <div class=" overflow-hidden sm:w-[60%] ">
+    <div class="min-w-0 flex-1 overflow-hidden">
         <div>
-            <p class="flex  items-center justify-between animate-slide sm:gap-0 gap-10 text-white">
+            <p class="flex w-max whitespace-nowrap items-center justify-between animate-slide sm:gap-0 gap-10 text-white">
                 <?= $scroll_text_data['data'][0]['content'] ?? "" ?>
             </p>
         </div>
     </div>
 
-    <div class="hidden sm:block">
-        <ul class="flex  items-center gap-4 sm:w-[30%]">
+    <div class="hidden sm:block shrink-0">
+        <ul class="flex items-center gap-4">
             <li>
                 <a href="<?= $header_footer_data[0]['meta_data']['primary_cta_url'] ?? "" ?>"
                     class="gap-1 flex items-center text-white transition-all  whitespace-nowrap">
@@ -428,18 +443,20 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
 <div class="bg-blue-main lg:hidden text-[10px] p-2 ">
 
     <div class="flex justify-between items-center overflow-x-auto">
-        <div>
-            <a href="tel:<?= $header_footer_data[0]['meta_data']['phones'] ?? "" ?>" class="gap-1 flex items-center text-white transition-all  whitespace-nowrap">
+        <div class="flex items-center gap-1">
+            <a href="tel:<?= htmlspecialchars(preg_replace('/[^\d+]/', '', $headerPhoneNumbers[0] ?? ''), ENT_QUOTES, 'UTF-8') ?>" class="flex items-center text-white transition-all whitespace-nowrap">
                 <svg width="12" height="12" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M17.7875 19.5793C15.8778 19.5793 13.991 19.1631 12.1271 18.3308C10.2632 17.4985 8.56736 16.3181 7.03958 14.7897C5.51181 13.2613 4.33175 11.5655 3.49942 9.7022C2.66708 7.83892 2.25061 5.95212 2.25 4.04178C2.25 3.76678 2.34167 3.53762 2.525 3.35428C2.70833 3.17095 2.9375 3.07928 3.2125 3.07928H6.925C7.13889 3.07928 7.32986 3.15201 7.49792 3.29745C7.66597 3.4429 7.76528 3.61462 7.79583 3.81262L8.39167 7.02095C8.42222 7.2654 8.41458 7.47165 8.36875 7.6397C8.32292 7.80776 8.23889 7.9529 8.11667 8.07512L5.89375 10.321C6.19931 10.8862 6.562 11.4323 6.98183 11.959C7.40167 12.4858 7.86397 12.994 8.36875 13.4835C8.84236 13.9571 9.33889 14.3965 9.85833 14.8016C10.3778 15.2068 10.9278 15.5771 11.5083 15.9126L13.6625 13.7585C13.8 13.621 13.9797 13.518 14.2015 13.4495C14.4233 13.3811 14.6409 13.3618 14.8542 13.3918L18.0167 14.0335C18.2306 14.0946 18.4062 14.2055 18.5438 14.3662C18.6812 14.5269 18.75 14.7063 18.75 14.9043V18.6168C18.75 18.8918 18.6583 19.121 18.475 19.3043C18.2917 19.4876 18.0625 19.5793 17.7875 19.5793Z"
                         class="fill-white transition-all group-hover:fill-red-500" fill="white" />
                 </svg>
-                <div>
-                    <?= $header_footer_data[0]['meta_data']['phones'] ?? "" ?>
-                </div>
-                <!-- <span class="hidden sm:block">, 9044055605</span> -->
             </a>
+            <div class="flex items-center gap-1 whitespace-nowrap text-white">
+                <?php foreach ($headerPhoneNumbers as $index => $phone): ?>
+                    <?php if ($index > 0): ?><span aria-hidden="true">,</span><?php endif; ?>
+                    <a href="tel:<?= htmlspecialchars(preg_replace('/[^\d+]/', '', $phone), ENT_QUOTES, 'UTF-8') ?>" class="text-white transition-all"><?= htmlspecialchars($phone, ENT_QUOTES, 'UTF-8') ?></a>
+                <?php endforeach; ?>
+            </div>
         </div>
 
         <div>
@@ -527,9 +544,6 @@ function renderMenu($items, $depth = 0)
         $url = trim($item['url'] ?? '');
         $target = htmlspecialchars($item['target'] ?? '', ENT_QUOTES);
         $name = preg_replace('/\s*Page$/i', '', $item['name']);
-        if ($name === strtoupper($name)) {
-            $name = ucfirst(strtolower($name));
-        }
 
         // Determine full URL safely
         if (

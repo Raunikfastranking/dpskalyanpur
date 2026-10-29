@@ -442,8 +442,18 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
         $heroVideoId = '';
     }
 
+    $heroEmbedOrigin = '';
+    $heroEmbedHost = $_SERVER['HTTP_HOST'] ?? '';
+    if ($heroEmbedHost !== '' && !preg_match('/^(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/i', $heroEmbedHost)) {
+        $heroEmbedScheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $heroEmbedOrigin = rawurlencode($heroEmbedScheme . '://' . $heroEmbedHost);
+    }
+
     $heroVideoEmbedUrl = $heroVideoId
-        ? 'https://www.youtube.com/embed/' . $heroVideoId . '?autoplay=1&mute=1&loop=1&playlist=' . $heroVideoId . '&controls=0&autohide=1&disablekb=1&fs=0&playsinline=1&rel=0&cc_load_policy=0&iv_load_policy=3'
+        ? 'https://www.youtube.com/embed/' . $heroVideoId
+            . '?autoplay=1&mute=1&loop=1&playlist=' . $heroVideoId
+            . '&controls=0&autohide=1&disablekb=1&fs=0&playsinline=1&rel=0&cc_load_policy=0&iv_load_policy=3&modestbranding=1&enablejsapi=1'
+            . ($heroEmbedOrigin !== '' ? '&origin=' . $heroEmbedOrigin : '')
         : '';
     ?>
 
@@ -456,6 +466,84 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
         .heroSlider video::-webkit-media-controls-start-playback-button {
             display: none !important;
             -webkit-appearance: none;
+        }
+
+        .hero-video-mobile-mask-top,
+        .hero-video-mobile-mask-bottom {
+            display: none;
+        }
+
+        @media (max-width: 640px) {
+            .heroSlider[data-video-hero="true"] {
+                width: 100vw;
+                margin-left: calc(50% - 50vw);
+            }
+
+            .heroSlider[data-video-hero="true"] .hero-video-frame {
+                height: 50vh;
+                height: 50svh;
+                min-height: 220px;
+                aspect-ratio: auto !important;
+            }
+
+            /* Simple full-area embed — avoids transform/width bugs that hid the iframe */
+            .heroSlider[data-video-hero="true"] .hero-video-embed-wrap {
+                position: absolute !important;
+                inset: 0 !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                margin: 0 !important;
+                transform: none !important;
+                aspect-ratio: auto !important;
+            }
+
+            .heroSlider[data-video-hero="true"] .hero-video-embed-wrap iframe {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 100vw;
+                height: 56.25vw;
+                min-width: 177.78vh;
+                min-width: 177.78svh;
+                min-height: 100%;
+                border: 0;
+                transform: translate(-50%, -50%);
+            }
+
+            .heroSlider[data-video-hero="true"] .hero-video-frame > video {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transform: none;
+            }
+
+            .hero-video-mobile-mask-top,
+            .hero-video-mobile-mask-bottom {
+                display: block;
+                position: absolute;
+                left: 0;
+                right: 0;
+                z-index: 15;
+                pointer-events: none;
+            }
+
+            .hero-video-mobile-mask-top {
+                top: 0;
+                height: 10%;
+                min-height: 36px;
+                background: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.75) 65%, transparent 100%);
+            }
+
+            .hero-video-mobile-mask-bottom {
+                bottom: 0;
+                height: 14%;
+                min-height: 44px;
+                background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.75) 65%, transparent 100%);
+            }
         }
     </style>
 
@@ -470,22 +558,24 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
                         if ($heroVideoUrl) { ?>
                     <li class="relative">
                         <?php if ($heroVideoEmbedUrl) { ?>
-                            <div class="relative w-full aspect-[16/5] overflow-hidden bg-black">
-                                <div class="absolute left-0 top-1/2 w-full aspect-video -translate-y-1/2">
+                            <div class="hero-video-frame relative w-full aspect-[16/5] overflow-hidden bg-black">
+                                <div class="hero-video-embed-wrap absolute left-0 top-1/2 w-full aspect-video -translate-y-1/2">
                                     <iframe
-                                        class="pointer-events-none absolute inset-0 w-full h-full"
+                                        class="hero-video-iframe pointer-events-none absolute inset-0 w-full h-full"
                                         src="<?= htmlspecialchars($heroVideoEmbedUrl, ENT_QUOTES, 'UTF-8') ?>"
                                         title="Home page hero video"
                                         tabindex="-1"
                                         referrerpolicy="strict-origin-when-cross-origin"
-                                        allow="autoplay; encrypted-media; picture-in-picture"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                         fetchpriority="high">
                                     </iframe>
                                 </div>
                                 <div class="pointer-events-none absolute inset-0 z-10 bg-[#005224]/20"></div>
+                                <div class="hero-video-mobile-mask-top" aria-hidden="true"></div>
+                                <div class="hero-video-mobile-mask-bottom" aria-hidden="true"></div>
                             </div>
                         <?php } else { ?>
-                            <div class="relative w-full aspect-[16/5] overflow-hidden">
+                            <div class="hero-video-frame relative w-full aspect-[16/5] overflow-hidden">
                                 <video
                                     class="pointer-events-none absolute inset-0 block w-full h-full object-cover"
                                     autoplay
@@ -497,6 +587,8 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
                                     <source src="<?= htmlspecialchars($heroVideoUrl, ENT_QUOTES, 'UTF-8') ?>">
                                 </video>
                                 <div class="pointer-events-none absolute inset-0 z-10 bg-[#005224]/40"></div>
+                                <div class="hero-video-mobile-mask-top" aria-hidden="true"></div>
+                                <div class="hero-video-mobile-mask-bottom" aria-hidden="true"></div>
                             </div>
                         <?php } ?>
                     </li>
@@ -559,6 +651,66 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
                 </div>
 
             </div>
+            <?php if ($heroVideoUrl) { ?>
+                <script>
+                    (() => {
+                        const isMobileHero = window.matchMedia('(max-width: 640px)').matches;
+                        const frame = document.querySelector('.heroSlider[data-video-hero="true"] .hero-video-iframe');
+                        const video = document.querySelector('.heroSlider[data-video-hero="true"] video');
+
+                        const postToPlayer = (targetFrame, payload) => {
+                            if (!targetFrame?.contentWindow) return;
+                            targetFrame.contentWindow.postMessage(JSON.stringify(payload), '*');
+                        };
+
+                        const ensureYoutubePlaying = (targetFrame) => {
+                            postToPlayer(targetFrame, { event: 'command', func: 'mute', args: [] });
+                            postToPlayer(targetFrame, { event: 'command', func: 'playVideo', args: [] });
+                            if (isMobileHero) {
+                                postToPlayer(targetFrame, { event: 'command', func: 'setOption', args: ['captions', 'track', {}] });
+                                postToPlayer(targetFrame, { event: 'command', func: 'setOption', args: ['showCaptions', 'false'] });
+                            }
+                        };
+
+                        if (frame) {
+                            const run = () => ensureYoutubePlaying(frame);
+                            frame.addEventListener('load', run);
+                            run();
+                            [400, 1000, 2500, 5000].forEach((delay) => setTimeout(run, delay));
+                            window.addEventListener('message', (event) => {
+                                if (!/^https:\/\/(www\.)?youtube(-nocookie)?\.com$/i.test(event.origin)) return;
+                                try {
+                                    const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                                    if (data?.event === 'onReady' || data?.info?.playerState !== undefined) {
+                                        run();
+                                    }
+                                } catch (e) { /* ignore */ }
+                            });
+                            document.addEventListener('visibilitychange', () => {
+                                if (!document.hidden) run();
+                            });
+                        }
+
+                        if (video) {
+                            const tryPlay = () => {
+                                video.muted = true;
+                                video.defaultMuted = true;
+                                video.setAttribute('playsinline', '');
+                                video.setAttribute('webkit-playsinline', '');
+                                video.play().catch(() => {});
+                            };
+                            if (isMobileHero) {
+                                Array.from(video.textTracks || []).forEach((track) => {
+                                    track.mode = 'disabled';
+                                });
+                            }
+                            tryPlay();
+                            video.addEventListener('loadedmetadata', tryPlay);
+                            video.addEventListener('canplay', tryPlay);
+                        }
+                    })();
+                </script>
+            <?php } ?>
             <div class="mt-5 sm:mt-[60px] 2xl:w-[1080px] lg:w-[824px] md:w-[567px] sm:w-[440px] sm:mx-auto sm:px-5 px-3">
                 <div>
                     <ul class="grid 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-2 grid-cols-2 items-center gap-5">
@@ -683,7 +835,7 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
         <div class="mt-10">
 
             <div class="bg-[#005427] text-center pt-5 sm:pb-2 pb-5">
-                <h2 class="text-[32px] font-[700] leading-9 text-white  relative text-center ">Legacy of Excellence
+                <h2 class="text-[32px] font-[700] leading-9 text-white  relative text-center ">Legacy of Excellence The Superhouse Group
                 </h2>
             </div>
             <div class="sm:py-8 py-5 bg-feature m-bg-feature mt-[-1px] ">

@@ -335,10 +335,10 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
     </div>
 </div>
 
-<div class="bg-blue-main p-2 px-10 lg:flex hidden justify-between items-center text-[12px]">
+<div class="bg-blue-main p-2 px-10 lg:flex hidden justify-between items-center gap-4 text-[12px]">
 
 
-    <div class="sm:w-[10%]">
+    <div class="w-max shrink-0">
         <a href="tel:<?= $header_footer_data[0]['meta_data']['phones'] ?? "" ?>" class="gap-1 flex items-center text-white transition-all  whitespace-nowrap">
             <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -349,16 +349,16 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
         </a>
     </div>
 
-    <div class=" overflow-hidden sm:w-[60%] ">
+    <div class="min-w-0 flex-1 overflow-hidden">
         <div>
-            <p class="flex  items-center justify-between animate-slide sm:gap-0 gap-10 text-white">
+            <p class="flex w-max whitespace-nowrap items-center justify-between animate-slide sm:gap-0 gap-10 text-white">
                 <?= $scroll_text_data['data'][0]['content'] ?? "" ?>
             </p>
         </div>
     </div>
 
-    <div class="hidden sm:block">
-        <ul class="flex  items-center gap-4 sm:w-[30%]">
+    <div class="hidden sm:block shrink-0">
+        <ul class="flex items-center gap-4">
             <li>
                 <a href="<?= $header_footer_data[0]['meta_data']['primary_cta_url'] ?? "" ?>"
                     class="gap-1 flex items-center text-white transition-all  whitespace-nowrap">
@@ -527,9 +527,6 @@ function renderMenu($items, $depth = 0)
         $url = trim($item['url'] ?? '');
         $target = htmlspecialchars($item['target'] ?? '', ENT_QUOTES);
         $name = preg_replace('/\s*Page$/i', '', $item['name']);
-        if ($name === strtoupper($name)) {
-            $name = ucfirst(strtolower($name));
-        }
 
         // Determine full URL safely
         if (

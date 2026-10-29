@@ -163,6 +163,20 @@ include "includes/apis.php";
             background-color: #002A5B !important;
         }
 
+        .home-cta-card img {
+            transition: filter 0.3s ease, transform 0.3s ease;
+        }
+
+        .home-cta-card:hover img,
+        .home-cta-card:focus-visible img {
+            filter:
+                drop-shadow(1px 0 0 #fff)
+                drop-shadow(-1px 0 0 #fff)
+                drop-shadow(0 1px 0 #fff)
+                drop-shadow(0 -1px 0 #fff);
+            transform: translateY(-2px) scale(1.06);
+        }
+
         @media (max-width: 640px) {
             .swiper {
                 box-shadow: none !important;
@@ -722,8 +736,8 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
                             <li>
                                 <a href="<?= $data['redirect_url']; ?>"
                                     target="_blank"
-                                    class="group w-full h-[110px] sm:h-auto border border-[#005224] rounded-[12px] bg-[#FED72B]/20 hover:bg-[#005224] sm:p-[20px] transition-all duration-300 transform hover:scale-[1.03] flex-col sm:flex-row flex justify-center items-center">
-                                    <img src="<?= empty($data['media_file']) ? $data['media_url'] : $api_url . '/' . $data['media_file'] ?>" alt="" class="2xl:w-[60px] 2xl:h-[60px] xl:w-[60px] xl:h-[60px] lg:w-[45px] lg:h-[45px] sm:w-[45px] sm:h-[45px] object-contain"
+                                    class="home-cta-card group w-full h-[110px] sm:h-auto border border-[#005224] rounded-[12px] bg-[#FED72B]/20 hover:bg-[#005224] sm:p-[20px] transition-all duration-300 transform hover:scale-[1.03] flex-col sm:flex-row flex justify-center items-center">
+                                    <img src="<?= empty($data['media_file']) ? $data['media_url'] : $api_url . '/' . $data['media_file'] ?>" alt="" class="home-cta-icon 2xl:w-[60px] 2xl:h-[60px] xl:w-[60px] xl:h-[60px] lg:w-[45px] lg:h-[45px] sm:w-[45px] sm:h-[45px] object-contain"
                                      fetchpriority="high"
   loading="lazy"
   decoding="async">

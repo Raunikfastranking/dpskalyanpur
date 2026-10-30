@@ -849,8 +849,7 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
         <div class="mt-10">
 
             <div class="bg-[#005427] text-center pt-5 sm:pb-2 pb-5">
-                <h2 class="text-[32px] font-[700] leading-9 text-white  relative text-center ">Legacy of Excellence The Superhouse Group
-                </h2>
+                <?= $home_data['data']['sections'][4]['content_heading'] ?? $home_data['data']['sections'][4]['content'] ?? "" ?>
             </div>
             <div class="sm:py-8 py-5 bg-feature m-bg-feature mt-[-1px] ">
                 <div class="grid grid-cols-1 md:grid-cols-5">

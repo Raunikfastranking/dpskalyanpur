@@ -51,6 +51,12 @@ if (isset($slugMap[$cleanPath]) && file_exists(__DIR__ . $slugMap[$cleanPath])) 
     return true;
 }
 
+if ($cleanPath === '/hostel-overview-dpskalyanpur') {
+    $_GET['page'] = 'hostel-overview-dpskalyanpur';
+    require __DIR__ . '/page-template.php';
+    return true;
+}
+
 // Kuch na mila -> 404 page
 http_response_code(404);
 require __DIR__ . '/404.php';

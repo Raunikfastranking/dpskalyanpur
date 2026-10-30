@@ -4,7 +4,6 @@ $page = "dyanmic-page";
 // Include apis.php to get global gallery data (if not already included)
 if (!defined('APIS_INCLUDED')) {
     include "includes/apis.php";
-    define('APIS_INCLUDED', true);
 }
 
 require_once "layouts/layout-function.php"; 

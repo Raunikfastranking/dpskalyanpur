@@ -33,6 +33,7 @@ $pageDataMap = [
     "foundational-wing-faculty" =>  $foundational_data,
     "music-dance-department" => $music_data,
     "preparatory-stage" => $preparatory_data,
+    "foundational-stage" => $foundational_stage_data,
     "middle-stage" => $middle_stage_data,
     "secondary-stage" => $secondary_stage_data,
     "senior-secondary-stage" => $sr_secondary_stage_data,
@@ -159,10 +160,7 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
         Enquire Now
     </a>
 </div>
-<div id="esuccessPopup" class="relative fixed  bg-green-500 text-white px-4 py-2 rounded mb-5 hidden" style="z-index:9999;
-    position: fixed;
-    right: 0;
-    top: 20%;">
+<div id="esuccessPopup" class="hidden bg-green-500 text-white px-4 py-2 rounded mb-5" style="z-index:9999;position:fixed;right:0;top:20%;">
     Form submitted successfully!
 </div>
 <div id="popupForm" class="fixed inset-0 bg-black/60 flex items-start md:items-center justify-center z-[9998] overflow-y-auto hidden">
@@ -337,30 +335,45 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
     </div>
 </div>
 
-<div class="bg-blue-main p-2 px-10 lg:flex hidden justify-between items-center text-[12px]">
+<?php
+$headerPhoneNumbers = preg_split(
+    '/\s*[,;|]\s*/',
+    $header_footer_data[0]['meta_data']['phones'] ?? '',
+    -1,
+    PREG_SPLIT_NO_EMPTY
+);
+$headerPhoneNumbers = array_values(array_filter(array_map('trim', $headerPhoneNumbers)));
+?>
+
+<div class="bg-blue-main p-2 px-10 lg:flex hidden justify-between items-center gap-4 text-[12px]">
 
 
-    <div class="sm:w-[10%]">
-        <a href="tel:<?= $header_footer_data[0]['meta_data']['phones'] ?? "" ?>" class="gap-1 flex items-center text-white transition-all  whitespace-nowrap">
+    <div class="w-max shrink-0 flex items-center gap-1">
+        <a href="tel:<?= htmlspecialchars(preg_replace('/[^\d+]/', '', $headerPhoneNumbers[0] ?? ''), ENT_QUOTES, 'UTF-8') ?>" class="flex items-center text-white transition-all whitespace-nowrap">
             <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M17.7875 19.5793C15.8778 19.5793 13.991 19.1631 12.1271 18.3308C10.2632 17.4985 8.56736 16.3181 7.03958 14.7897C5.51181 13.2613 4.33175 11.5655 3.49942 9.7022C2.66708 7.83892 2.25061 5.95212 2.25 4.04178C2.25 3.76678 2.34167 3.53762 2.525 3.35428C2.70833 3.17095 2.9375 3.07928 3.2125 3.07928H6.925C7.13889 3.07928 7.32986 3.15201 7.49792 3.29745C7.66597 3.4429 7.76528 3.61462 7.79583 3.81262L8.39167 7.02095C8.42222 7.2654 8.41458 7.47165 8.36875 7.6397C8.32292 7.80776 8.23889 7.9529 8.11667 8.07512L5.89375 10.321C6.19931 10.8862 6.562 11.4323 6.98183 11.959C7.40167 12.4858 7.86397 12.994 8.36875 13.4835C8.84236 13.9571 9.33889 14.3965 9.85833 14.8016C10.3778 15.2068 10.9278 15.5771 11.5083 15.9126L13.6625 13.7585C13.8 13.621 13.9797 13.518 14.2015 13.4495C14.4233 13.3811 14.6409 13.3618 14.8542 13.3918L18.0167 14.0335C18.2306 14.0946 18.4062 14.2055 18.5438 14.3662C18.6812 14.5269 18.75 14.7063 18.75 14.9043V18.6168C18.75 18.8918 18.6583 19.121 18.475 19.3043C18.2917 19.4876 18.0625 19.5793 17.7875 19.5793Z"
                     class="fill-white transition-all group-hover:fill-red-500" fill="white" />
             </svg>
-            <?= $header_footer_data[0]['meta_data']['phones'] ?? "" ?>
         </a>
+        <div class="flex items-center gap-1 whitespace-nowrap text-white">
+            <?php foreach ($headerPhoneNumbers as $index => $phone): ?>
+                <?php if ($index > 0): ?><span aria-hidden="true">,</span><?php endif; ?>
+                <a href="tel:<?= htmlspecialchars(preg_replace('/[^\d+]/', '', $phone), ENT_QUOTES, 'UTF-8') ?>" class="text-white transition-all"><?= htmlspecialchars($phone, ENT_QUOTES, 'UTF-8') ?></a>
+            <?php endforeach; ?>
+        </div>
     </div>
 
-    <div class=" overflow-hidden sm:w-[60%] ">
+    <div class="min-w-0 flex-1 overflow-hidden">
         <div>
-            <p class="flex  items-center justify-between animate-slide sm:gap-0 gap-10 text-white">
+            <p class="flex w-max whitespace-nowrap items-center justify-between animate-slide sm:gap-0 gap-10 text-white">
                 <?= $scroll_text_data['data'][0]['content'] ?? "" ?>
             </p>
         </div>
     </div>
 
-    <div class="hidden sm:block">
-        <ul class="flex  items-center gap-4 sm:w-[30%]">
+    <div class="hidden sm:block shrink-0">
+        <ul class="flex items-center gap-4">
             <li>
                 <a href="<?= $header_footer_data[0]['meta_data']['primary_cta_url'] ?? "" ?>"
                     class="gap-1 flex items-center text-white transition-all  whitespace-nowrap">
@@ -430,18 +443,20 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
 <div class="bg-blue-main lg:hidden text-[10px] p-2 ">
 
     <div class="flex justify-between items-center overflow-x-auto">
-        <div>
-            <a href="tel:<?= $header_footer_data[0]['meta_data']['phones'] ?? "" ?>" class="gap-1 flex items-center text-white transition-all  whitespace-nowrap">
+        <div class="flex items-center gap-1">
+            <a href="tel:<?= htmlspecialchars(preg_replace('/[^\d+]/', '', $headerPhoneNumbers[0] ?? ''), ENT_QUOTES, 'UTF-8') ?>" class="flex items-center text-white transition-all whitespace-nowrap">
                 <svg width="12" height="12" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M17.7875 19.5793C15.8778 19.5793 13.991 19.1631 12.1271 18.3308C10.2632 17.4985 8.56736 16.3181 7.03958 14.7897C5.51181 13.2613 4.33175 11.5655 3.49942 9.7022C2.66708 7.83892 2.25061 5.95212 2.25 4.04178C2.25 3.76678 2.34167 3.53762 2.525 3.35428C2.70833 3.17095 2.9375 3.07928 3.2125 3.07928H6.925C7.13889 3.07928 7.32986 3.15201 7.49792 3.29745C7.66597 3.4429 7.76528 3.61462 7.79583 3.81262L8.39167 7.02095C8.42222 7.2654 8.41458 7.47165 8.36875 7.6397C8.32292 7.80776 8.23889 7.9529 8.11667 8.07512L5.89375 10.321C6.19931 10.8862 6.562 11.4323 6.98183 11.959C7.40167 12.4858 7.86397 12.994 8.36875 13.4835C8.84236 13.9571 9.33889 14.3965 9.85833 14.8016C10.3778 15.2068 10.9278 15.5771 11.5083 15.9126L13.6625 13.7585C13.8 13.621 13.9797 13.518 14.2015 13.4495C14.4233 13.3811 14.6409 13.3618 14.8542 13.3918L18.0167 14.0335C18.2306 14.0946 18.4062 14.2055 18.5438 14.3662C18.6812 14.5269 18.75 14.7063 18.75 14.9043V18.6168C18.75 18.8918 18.6583 19.121 18.475 19.3043C18.2917 19.4876 18.0625 19.5793 17.7875 19.5793Z"
                         class="fill-white transition-all group-hover:fill-red-500" fill="white" />
                 </svg>
-                <div>
-                    <?= $header_footer_data[0]['meta_data']['phones'] ?? "" ?>
-                </div>
-                <!-- <span class="hidden sm:block">, 9044055605</span> -->
             </a>
+            <div class="flex items-center gap-1 whitespace-nowrap text-white">
+                <?php foreach ($headerPhoneNumbers as $index => $phone): ?>
+                    <?php if ($index > 0): ?><span aria-hidden="true">,</span><?php endif; ?>
+                    <a href="tel:<?= htmlspecialchars(preg_replace('/[^\d+]/', '', $phone), ENT_QUOTES, 'UTF-8') ?>" class="text-white transition-all"><?= htmlspecialchars($phone, ENT_QUOTES, 'UTF-8') ?></a>
+                <?php endforeach; ?>
+            </div>
         </div>
 
         <div>
@@ -514,20 +529,21 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
 <?php
 $menu_data = $menu_data['data']['menu_items'] ?? [];
 
-function renderMenu($items, $isSub = false)
+function renderMenu($items, $depth = 0)
 {
     if (empty($items)) return;
 
-    echo $isSub ? '<ul class="dps-menu-open">' : '<ul class="NavMenu MobileNav" id="NavMenu">';
+    if ($depth === 0) {
+        echo '<ul class="NavMenu MobileNav" id="NavMenu">';
+    } else {
+        echo '<ul class="dps-submenu" data-depth="' . (int) $depth . '">';
+    }
 
     foreach ($items as $item) {
         $hasChildren = !empty($item['descendants']);
         $url = trim($item['url'] ?? '');
         $target = htmlspecialchars($item['target'] ?? '', ENT_QUOTES);
         $name = preg_replace('/\s*Page$/i', '', $item['name']);
-        if ($name === strtoupper($name)) {
-            $name = ucfirst(strtolower($name));
-        }
 
         // Determine full URL safely
         if (
@@ -547,22 +563,16 @@ function renderMenu($items, $isSub = false)
         echo '<li>';
 
         if ($hasChildren) {
-            // Parent menu with arrow & toggle
-            echo '<a class="hover:text-[#FED72B] dps-menu-toggle flex items-center gap-2 group">';
-            echo htmlspecialchars($name);
-
-            // ▼ arrow icon
+            echo '<a href="#" role="button" aria-expanded="false" class="hover:text-[#FED72B] dps-menu-toggle flex items-center justify-between gap-2 group">';
+            echo '<span>' . htmlspecialchars($name) . '</span>';
             echo '<svg width="8" height="5" viewBox="0 0 8 5" xmlns="http://www.w3.org/2000/svg" 
-                     class="transition fill-white lg:fill-black group-hover:fill-[#FED72B]">
+                     class="dps-menu-chevron shrink-0 transition fill-white lg:fill-black group-hover:fill-[#FED72B]" aria-hidden="true">
                       <path fill-rule="evenodd" clip-rule="evenodd"
                         d="M0.699203 0.281451C0.825931 0.154761 0.997788 0.0835904 1.17698 0.0835904C1.35617 0.0835904 1.52803 0.154761 1.65476 0.281451L3.88011 2.5068L6.10546 0.281451C6.1678 0.216906 6.24237 0.165424 6.32482 0.130007C6.40727 0.0945895 6.49594 0.0759472 6.58567 0.0751674C6.6754 0.0743877 6.76439 0.091486 6.84744 0.125465C6.93049 0.159444 7.00595 0.209623 7.0694 0.273074C7.13285 0.336525 7.18303 0.411978 7.21701 0.495029C7.25099 0.57808 7.26808 0.667067 7.2673 0.756797C7.26652 0.846527 7.24788 0.935203 7.21246 1.01765C7.17705 1.1001 7.12557 1.17467 7.06102 1.23701L4.35789 3.94014C4.23116 4.06683 4.0593 4.138 3.88011 4.138C3.70092 4.138 3.52906 4.06683 3.40233 3.94014L0.699203 1.23701C0.572513 1.11028 0.501343 0.938422 0.501343 0.759229C0.501343 0.580035 0.572513 0.408179 0.699203 0.281451Z"/>
                   </svg>';
             echo '</a>';
-
-            // Render children recursively
-            renderMenu($item['descendants'], true);
+            renderMenu($item['descendants'], $depth + 1);
         } else {
-            // Normal menu link
             echo '<a href="' . htmlspecialchars($fullUrl, ENT_QUOTES) . '" target="' . $target . '" class="hover:text-[#FED72B]">';
             echo htmlspecialchars($name);
             echo '</a>';
@@ -580,22 +590,23 @@ function renderMenu($items, $isSub = false)
         <div class="logo">
             <a href="/"><img src="https://myschool-assets.s3.ap-south-1.amazonaws.com/uploads/AONKJFjio6pQUZ1wq39Fg5T483Hp1HBsRNqOkvDI.png" class="w-44" alt=""></a>
         </div>
-        <label for="menubrop" class="bartoggle">≡</label>
-        <div class="onMobileEffect" id="onMobileEffect" style="transform: translateX(-100%);">
-            <input type="checkbox" id="menubrop">
+        <label for="menubrop" class="bartoggle" aria-label="Open menu">≡</label>
+        <input type="checkbox" id="menubrop" class="nav-menu-checkbox" aria-hidden="true">
+        <label for="menubrop" class="mobile-nav-backdrop" aria-hidden="true"></label>
+        <div class="mobile-nav-panel" id="mobileNavPanel">
             <div class="NavMenuLogo bg-white py-5 justify-between px-2">
                 <a href="/">
                     <img src="https://myschool-assets.s3.ap-south-1.amazonaws.com/uploads/AONKJFjio6pQUZ1wq39Fg5T483Hp1HBsRNqOkvDI.png" class="w-[200px]" alt="">
                 </a>
-                <button id="closeMenu">
+                <button type="button" id="closeMenu" aria-label="Close menu">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32">
                         <path fill="#f11e1e"
                             d="M16 2C8.2 2 2 8.2 2 16s6.2 14 14 14s14-6.2 14-14S23.8 2 16 2m5.4 21L16 17.6L10.6 23L9 21.4l5.4-5.4L9 10.6L10.6 9l5.4 5.4L21.4 9l1.6 1.6l-5.4 5.4l5.4 5.4z" />
                     </svg>
                 </button>
             </div>
+            <?php renderMenu($menu_data); ?>
         </div>
-        <?php renderMenu($menu_data); ?>
 
         <div class="sm:ml-12 sm:mt-[-1px] mt-5 ml-5 desktopEnquiry">
             <button onclick="openPopup()" id="openPopupDesktop" class="px-4 py-2 bg-blue-main text-white ">Enquiry Form</button>

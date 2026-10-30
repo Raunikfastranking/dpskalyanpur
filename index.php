@@ -163,6 +163,20 @@ include "includes/apis.php";
             background-color: #002A5B !important;
         }
 
+        .home-cta-card img {
+            transition: filter 0.3s ease, transform 0.3s ease;
+        }
+
+        .home-cta-card:hover img,
+        .home-cta-card:focus-visible img {
+            filter:
+                drop-shadow(1px 0 0 #fff)
+                drop-shadow(-1px 0 0 #fff)
+                drop-shadow(0 1px 0 #fff)
+                drop-shadow(0 -1px 0 #fff);
+            transform: translateY(-2px) scale(1.06);
+        }
+
         @media (max-width: 640px) {
             .swiper {
                 box-shadow: none !important;
@@ -395,17 +409,205 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
 </div>
 <?php endif; ?>
 
+    <?php
+    $heroSection = $home_data['data']['sections'][0] ?? [];
+    $heroContent = $heroSection['resolved_content'] ?? [];
+    $heroData = $heroContent['items'] ?? [];
+    $heroVideo = null;
+
+    foreach (($heroContent['media'] ?? []) as $media) {
+        if (($media['media_type'] ?? '') === 'video') {
+            $heroVideo = $media;
+            break;
+        }
+    }
+
+    $heroVideoUrl = $heroVideo['media_url'] ?? $heroContent['video_url'] ?? '';
+    if (empty($heroVideoUrl) && !empty($heroVideo['media_file'])) {
+        $heroVideoUrl = $api_url . '/' . ltrim($heroVideo['media_file'], '/');
+    } elseif (!empty($heroVideoUrl) && !filter_var($heroVideoUrl, FILTER_VALIDATE_URL)) {
+        $heroVideoUrl = $api_url . '/' . ltrim($heroVideoUrl, '/');
+    }
+
+    $heroVideoId = '';
+    if (preg_match('/^[A-Za-z0-9_-]{11}$/', $heroVideoUrl)) {
+        $heroVideoId = $heroVideoUrl;
+    } elseif ($heroVideoUrl) {
+        $heroVideoParseUrl = preg_match('#^https?://#i', $heroVideoUrl)
+            ? $heroVideoUrl
+            : 'https://' . ltrim($heroVideoUrl, '/');
+        $heroVideoParts = parse_url($heroVideoParseUrl);
+        $heroVideoHost = strtolower($heroVideoParts['host'] ?? '');
+        $heroVideoPath = trim($heroVideoParts['path'] ?? '', '/');
+
+        if ($heroVideoHost === 'youtu.be') {
+            $heroVideoId = explode('/', $heroVideoPath)[0] ?? '';
+        } elseif (in_array($heroVideoHost, ['youtube.com', 'www.youtube.com', 'm.youtube.com', 'music.youtube.com', 'youtube-nocookie.com', 'www.youtube-nocookie.com'], true)) {
+            parse_str($heroVideoParts['query'] ?? '', $heroVideoQuery);
+            if (!empty($heroVideoQuery['v'])) {
+                $heroVideoId = $heroVideoQuery['v'];
+            } elseif (preg_match('#^(?:embed|shorts|live|v)/([^/]+)#', $heroVideoPath, $matches)) {
+                $heroVideoId = $matches[1];
+            }
+        }
+    }
+
+    if (!preg_match('/^[A-Za-z0-9_-]{11}$/', $heroVideoId)) {
+        $heroVideoId = '';
+    }
+
+    $heroEmbedOrigin = '';
+    $heroEmbedHost = $_SERVER['HTTP_HOST'] ?? '';
+    if ($heroEmbedHost !== '' && !preg_match('/^(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/i', $heroEmbedHost)) {
+        $heroEmbedScheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $heroEmbedOrigin = rawurlencode($heroEmbedScheme . '://' . $heroEmbedHost);
+    }
+
+    $heroVideoEmbedUrl = $heroVideoId
+        ? 'https://www.youtube.com/embed/' . $heroVideoId
+            . '?autoplay=1&mute=1&loop=1&playlist=' . $heroVideoId
+            . '&controls=0&autohide=1&disablekb=1&fs=0&playsinline=1&rel=0&cc_load_policy=0&iv_load_policy=3&modestbranding=1&enablejsapi=1'
+            . ($heroEmbedOrigin !== '' ? '&origin=' . $heroEmbedOrigin : '')
+        : '';
+    ?>
+
+    <style>
+        .heroSlider video::-webkit-media-controls,
+        .heroSlider video::-webkit-media-controls-enclosure,
+        .heroSlider video::-webkit-media-controls-panel,
+        .heroSlider video::-webkit-media-controls-overlay-play-button,
+        .heroSlider video::-webkit-media-controls-play-button,
+        .heroSlider video::-webkit-media-controls-start-playback-button {
+            display: none !important;
+            -webkit-appearance: none;
+        }
+
+        .hero-video-mobile-mask-top,
+        .hero-video-mobile-mask-bottom {
+            display: none;
+        }
+
+        @media (max-width: 640px) {
+            .heroSlider[data-video-hero="true"] {
+                width: 100vw;
+                margin-left: calc(50% - 50vw);
+            }
+
+            .heroSlider[data-video-hero="true"] .hero-video-frame {
+                height: 50vh;
+                height: 50svh;
+                min-height: 220px;
+                aspect-ratio: auto !important;
+            }
+
+            /* Simple full-area embed — avoids transform/width bugs that hid the iframe */
+            .heroSlider[data-video-hero="true"] .hero-video-embed-wrap {
+                position: absolute !important;
+                inset: 0 !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                margin: 0 !important;
+                transform: none !important;
+                aspect-ratio: auto !important;
+            }
+
+            .heroSlider[data-video-hero="true"] .hero-video-embed-wrap iframe {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 100vw;
+                height: 56.25vw;
+                min-width: 177.78vh;
+                min-width: 177.78svh;
+                min-height: 100%;
+                border: 0;
+                transform: translate(-50%, -50%);
+            }
+
+            .heroSlider[data-video-hero="true"] .hero-video-frame > video {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transform: none;
+            }
+
+            .hero-video-mobile-mask-top,
+            .hero-video-mobile-mask-bottom {
+                display: block;
+                position: absolute;
+                left: 0;
+                right: 0;
+                z-index: 15;
+                pointer-events: none;
+            }
+
+            .hero-video-mobile-mask-top {
+                top: 0;
+                height: 10%;
+                min-height: 36px;
+                background: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.75) 65%, transparent 100%);
+            }
+
+            .hero-video-mobile-mask-bottom {
+                bottom: 0;
+                height: 14%;
+                min-height: 44px;
+                background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.75) 65%, transparent 100%);
+            }
+        }
+    </style>
+
     <div class="main relative">
         <div class="mx-3">
 
-            <div class="relative w-full heroSlider opne-hide-circle">
+            <div class="relative w-full heroSlider opne-hide-circle" <?= !empty($heroVideoUrl) ? 'data-video-hero="true"' : '' ?>>
                 <!-- Slides -->
                 <div class="overflow-hidden" data-glide-el="track">
                       <ul class="relative w-full overflow-hidden p-0 whitespace-no-wrap flex flex-no-wrap [backface-visibility: hidden] [transform-style: preserve-3d] [touch-action: pan-Y] [will-change: transform]">
               <?php
-                        $hero_data = $home_data['data']['sections'][0]['resolved_content']['items'] ?? [];
-                        if (!empty($hero_data)) {
-                            foreach ($hero_data as $data) { ?>
+                        if ($heroVideoUrl) { ?>
+                    <li class="relative">
+                        <?php if ($heroVideoEmbedUrl) { ?>
+                            <div class="hero-video-frame relative w-full aspect-[16/5] overflow-hidden bg-black">
+                                <div class="hero-video-embed-wrap absolute left-0 top-1/2 w-full aspect-video -translate-y-1/2">
+                                    <iframe
+                                        class="hero-video-iframe pointer-events-none absolute inset-0 w-full h-full"
+                                        src="<?= htmlspecialchars($heroVideoEmbedUrl, ENT_QUOTES, 'UTF-8') ?>"
+                                        title="Home page hero video"
+                                        tabindex="-1"
+                                        referrerpolicy="strict-origin-when-cross-origin"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        fetchpriority="high">
+                                    </iframe>
+                                </div>
+                                <div class="pointer-events-none absolute inset-0 z-10 bg-[#005224]/20"></div>
+                                <div class="hero-video-mobile-mask-top" aria-hidden="true"></div>
+                                <div class="hero-video-mobile-mask-bottom" aria-hidden="true"></div>
+                            </div>
+                        <?php } else { ?>
+                            <div class="hero-video-frame relative w-full aspect-[16/5] overflow-hidden">
+                                <video
+                                    class="pointer-events-none absolute inset-0 block w-full h-full object-cover"
+                                    autoplay
+                                    muted
+                                    loop
+                                    playsinline
+                                    preload="metadata"
+                                    poster="<?= htmlspecialchars($heroContent['thumbnail_url'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                                    <source src="<?= htmlspecialchars($heroVideoUrl, ENT_QUOTES, 'UTF-8') ?>">
+                                </video>
+                                <div class="pointer-events-none absolute inset-0 z-10 bg-[#005224]/40"></div>
+                                <div class="hero-video-mobile-mask-top" aria-hidden="true"></div>
+                                <div class="hero-video-mobile-mask-bottom" aria-hidden="true"></div>
+                            </div>
+                        <?php } ?>
+                    </li>
+              <?php } elseif (!empty($heroData)) {
+                            foreach ($heroData as $data) { ?>
                     <li class="relative">
 
                         <!-- MOBILE IMAGE -->
@@ -448,7 +650,7 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
             </ul>
                 </div>
                 <!-- Controls -->
-                <div class="absolute left-0 flex items-center justify-between w-full h-0 px-4 top-1/2 hide-circle"
+                <div class="absolute left-0 flex items-center justify-between w-full h-0 px-4 top-1/2 hide-circle <?= !empty($heroVideoUrl) ? 'hidden' : '' ?>"
                     data-glide-el="controls">
                     <button
                         class="inline-flex items-center justify-center  relative right-[0px] hover:bg-[#FED72B] hover:text-white w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 border-slate-700 hover:text-slate-900 hover:border-slate-900 focus-visible:outline-none bg-white/20"
@@ -463,12 +665,66 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
                 </div>
 
             </div>
-            <style>
-                .custom-blue-hover:hover {
-                    box-shadow: 0 5px 0 rgb(0 84 39 / 88%), 0 10px 0 rgb(0 84 39 / 61%), 0 15px 0 rgb(0 84 39 / 54%), 0 20px 0 rgb(0 84 39 / 31%), 0 25px 0 rgba(5, 59, 122, 0.05);
-                }
-            </style>
+            <?php if ($heroVideoUrl) { ?>
+                <script>
+                    (() => {
+                        const isMobileHero = window.matchMedia('(max-width: 640px)').matches;
+                        const frame = document.querySelector('.heroSlider[data-video-hero="true"] .hero-video-iframe');
+                        const video = document.querySelector('.heroSlider[data-video-hero="true"] video');
 
+                        const postToPlayer = (targetFrame, payload) => {
+                            if (!targetFrame?.contentWindow) return;
+                            targetFrame.contentWindow.postMessage(JSON.stringify(payload), '*');
+                        };
+
+                        const ensureYoutubePlaying = (targetFrame) => {
+                            postToPlayer(targetFrame, { event: 'command', func: 'mute', args: [] });
+                            postToPlayer(targetFrame, { event: 'command', func: 'playVideo', args: [] });
+                            if (isMobileHero) {
+                                postToPlayer(targetFrame, { event: 'command', func: 'setOption', args: ['captions', 'track', {}] });
+                                postToPlayer(targetFrame, { event: 'command', func: 'setOption', args: ['showCaptions', 'false'] });
+                            }
+                        };
+
+                        if (frame) {
+                            const run = () => ensureYoutubePlaying(frame);
+                            frame.addEventListener('load', run);
+                            run();
+                            [400, 1000, 2500, 5000].forEach((delay) => setTimeout(run, delay));
+                            window.addEventListener('message', (event) => {
+                                if (!/^https:\/\/(www\.)?youtube(-nocookie)?\.com$/i.test(event.origin)) return;
+                                try {
+                                    const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                                    if (data?.event === 'onReady' || data?.info?.playerState !== undefined) {
+                                        run();
+                                    }
+                                } catch (e) { /* ignore */ }
+                            });
+                            document.addEventListener('visibilitychange', () => {
+                                if (!document.hidden) run();
+                            });
+                        }
+
+                        if (video) {
+                            const tryPlay = () => {
+                                video.muted = true;
+                                video.defaultMuted = true;
+                                video.setAttribute('playsinline', '');
+                                video.setAttribute('webkit-playsinline', '');
+                                video.play().catch(() => {});
+                            };
+                            if (isMobileHero) {
+                                Array.from(video.textTracks || []).forEach((track) => {
+                                    track.mode = 'disabled';
+                                });
+                            }
+                            tryPlay();
+                            video.addEventListener('loadedmetadata', tryPlay);
+                            video.addEventListener('canplay', tryPlay);
+                        }
+                    })();
+                </script>
+            <?php } ?>
             <div class="mt-5 sm:mt-[60px] 2xl:w-[1080px] lg:w-[824px] md:w-[567px] sm:w-[440px] sm:mx-auto sm:px-5 px-3">
                 <div>
                     <ul class="grid 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-2 grid-cols-2 items-center gap-5">
@@ -480,13 +736,13 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
                             <li>
                                 <a href="<?= $data['redirect_url']; ?>"
                                     target="_blank"
-                                    class="w-full h-[110px] sm:h-auto border border-[#005224] rounded-[12px] bg-[#FED72B]/20 sm:p-[20px] transition-all duration-300 transform hover:scale-[1.03] custom-blue-hover flex-col sm:flex-row flex justify-center items-center">
-                                    <img src="<?= empty($data['media_file']) ? $data['media_url'] : $api_url . '/' . $data['media_file'] ?>" alt="" class="2xl:w-[60px] 2xl:h-[60px] xl:w-[60px] xl:h-[60px] lg:w-[45px] lg:h-[45px] sm:w-[45px] sm:h-[45px] object-contain"
+                                    class="home-cta-card group w-full h-[110px] sm:h-auto border border-[#005224] rounded-[12px] bg-[#FED72B]/20 hover:bg-[#005224] sm:p-[20px] transition-all duration-300 transform hover:scale-[1.03] flex-col sm:flex-row flex justify-center items-center">
+                                    <img src="<?= empty($data['media_file']) ? $data['media_url'] : $api_url . '/' . $data['media_file'] ?>" alt="" class="home-cta-icon 2xl:w-[60px] 2xl:h-[60px] xl:w-[60px] xl:h-[60px] lg:w-[45px] lg:h-[45px] sm:w-[45px] sm:h-[45px] object-contain"
                                      fetchpriority="high"
   loading="lazy"
   decoding="async">
                                     <span
-                                        class="font-[600] text-[13px] sm:text-[16px] text-blue-main mt-2 sm:mt-0 sm:ml-2 text-center sm:text-left">
+                                        class="font-[600] text-[13px] sm:text-[16px] text-blue-main group-hover:text-white mt-2 sm:mt-0 sm:ml-2 text-center sm:text-left">
                                         <?= $data['heading']; ?>
                                     </span>
                                 </a>
@@ -593,8 +849,7 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
         <div class="mt-10">
 
             <div class="bg-[#005427] text-center pt-5 sm:pb-2 pb-5">
-                <h2 class="text-[32px] font-[700] leading-9 text-white  relative text-center ">Legacy of Excellence
-                </h2>
+                <?= $home_data['data']['sections'][4]['content_heading'] ?? $home_data['data']['sections'][4]['content'] ?? "" ?>
             </div>
             <div class="sm:py-8 py-5 bg-feature m-bg-feature mt-[-1px] ">
                 <div class="grid grid-cols-1 md:grid-cols-5">
@@ -659,15 +914,15 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
                 </ul>
             </div>
             <!-- Controls -->
-            <div class="absolute left-0 md:flex items-center justify-between w-full h-0 px-4 top-1/2 hide-circle hidden"
+            <div class="absolute left-0 flex items-center justify-between w-full h-0 px-4 top-1/2"
                 data-glide-el="controls">
                 <button
-                    class="inline-flex items-center justify-center relative right-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
+                    class="inline-flex items-center justify-center relative right-0 md:right-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
                     data-glide-dir="<" aria-label="prev slide">
                     <i class="fa-solid fa-angle-left text-[#005224]"></i>
                 </button>
                 <button
-                    class="inline-flex items-center justify-center relative left-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
+                    class="inline-flex items-center justify-center relative left-0 md:left-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
                     data-glide-dir=">" aria-label="next slide">
                     <i class="fa-solid fa-angle-right text-[#005224]"></i>
                 </button>
@@ -708,6 +963,8 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
 
 
     <?php
+    $videoSectionContent = $home_data['data']['sections'][7]['content'] ?? '';
+    $videoSectionHasImage = preg_match('/<img\b/i', $videoSectionContent) === 1;
     $video_data = $home_data['data']['sections'][7]['resolved_content']['media'][0]['media_url'] ?? '';
     $embedUrl = '';
     if (!empty($video_data)) {
@@ -725,12 +982,33 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
         }
     }
     ?>
-    <div class="sm:mt-[100px] mt-10">
+    <style>
+        .home-video-section .o-video.has-image {
+            height: auto;
+            padding-bottom: 0;
+        }
+
+        .home-video-section .o-video.has-image p {
+            margin: 0;
+        }
+
+        .home-video-section .o-video.has-image img {
+            display: block;
+            position: static;
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 0.75rem;
+        }
+    </style>
+    <div class="home-video-section sm:mt-[100px] mt-10">
         <div class="2xl:w-[1280px] lg:w-[1024px] md:w-[767px] sm:w-[640px] sm:mx-auto ">
 
             <div class="relative ">
-                <div class="o-video mx-auto">
-                    <?php if (!empty($embedUrl)): ?>
+                <div class="o-video mx-auto <?= $videoSectionHasImage ? 'has-image' : '' ?>">
+                    <?php if ($videoSectionHasImage): ?>
+                        <?= $videoSectionContent ?>
+                    <?php elseif (!empty($embedUrl)): ?>
                         <iframe class="w-full h-full rounded-xl"
                             src="<?php echo htmlspecialchars($embedUrl); ?>"
                             title="YouTube video" frameborder="0"
@@ -768,7 +1046,7 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
                                 style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
 
                                 <img src="<?= $api_url ?>/<?= $data['image_url'] ?? "" ?>" alt="<?= $data['title'] ?? "" ?>"
-                                    class="w-[100%] rounded-[10px]"
+                                    class="w-full aspect-[10/7] object-cover rounded-[10px]"
                                      fetchpriority="high"
   loading="lazy"
   decoding="async">
@@ -808,15 +1086,15 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
                     </ul>
                 </div>
                 <!-- Controls -->
-                <div class="absolute left-0 sm:flex hidden items-center justify-between w-full h-0 px-4 top-1/2 hide-circle"
+                <div class="absolute left-0 flex items-center justify-between w-full h-0 px-4 top-1/2"
                     data-glide-el="controls">
                     <button
-                        class="inline-flex items-center justify-center relative right-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
+                        class="inline-flex items-center justify-center relative right-0 md:right-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
                         data-glide-dir="<" aria-label="prev slide">
                         <i class="fa-solid fa-angle-left text-[#005224]"></i>
                     </button>
                     <button
-                        class="inline-flex items-center justify-center relative left-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
+                        class="inline-flex items-center justify-center relative left-0 md:left-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
                         data-glide-dir=">" aria-label="next slide">
                         <i class="fa-solid fa-angle-right text-[#005224]"></i>
                     </button>
@@ -943,7 +1221,7 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
 
                     <div class="2xl:w-[1280px] lg:w-[1024px] md:w-[767px] sm:w-[640px] sm:mx-auto sm:px-5 mx-3 px-3">
 
-                        <div class="relative  sm:pt-5 pt-2 ">
+                        <div class="relative  sm:pt-5 pt-2 opne-hide-circle">
 
                             <!-- <ul class="tabs 2xl:ml-[432px] md:ml-[298px]  ml-[6px]">
                                 <li class="tab-link current" data-tab="tab-1">Image Testimonials</li>
@@ -1024,6 +1302,20 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
 
                                     </ul>
                                 </div>
+                                <!-- Controls -->
+                                <div class="absolute left-0 flex items-center justify-between w-full h-0 px-4 top-1/2"
+                                    data-glide-el="controls">
+                                    <button
+                                        class="inline-flex items-center justify-center relative right-0 md:right-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
+                                        data-glide-dir="<" aria-label="prev slide">
+                                        <i class="fa-solid fa-angle-left text-[#005224]"></i>
+                                    </button>
+                                    <button
+                                        class="inline-flex items-center justify-center relative left-0 md:left-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
+                                        data-glide-dir=">" aria-label="next slide">
+                                        <i class="fa-solid fa-angle-right text-[#005224]"></i>
+                                    </button>
+                                </div>
                             </div>
 
                         </div>
@@ -1069,15 +1361,15 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
                     </ul>
                 </div>
                 <!-- Controls -->
-                <div class="absolute left-0 items-center justify-between w-full h-0 px-4 top-1/2 hide-circle hidden md:flex"
+                <div class="absolute left-0 flex items-center justify-between w-full h-0 px-4 top-1/2"
                     data-glide-el="controls">
                     <button
-                        class="inline-flex items-center justify-center relative right-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
+                        class="inline-flex items-center justify-center relative right-0 md:right-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
                         data-glide-dir="<" aria-label="prev slide">
                         <i class="fa-solid fa-angle-left text-[#005224]"></i>
                     </button>
                     <button
-                        class="inline-flex items-center justify-center relative left-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
+                        class="inline-flex items-center justify-center relative left-0 md:left-[66px] hover:bg-[#FED72B] w-8 h-8 transition duration-300 border rounded-full lg:w-10 lg:h-10 text-slate-700 hover:text-slate-900 focus-visible:outline-none bg-white/20"
                         data-glide-dir=">" aria-label="next slide">
                         <i class="fa-solid fa-angle-right text-[#005224]"></i>
                     </button>
@@ -1291,7 +1583,8 @@ if (dismiss) {
                         perView: 1
                     },
                     640: {
-                        perView: 1
+                        perView: 1,
+                        focusAt: 0
                     }
                 }
             });

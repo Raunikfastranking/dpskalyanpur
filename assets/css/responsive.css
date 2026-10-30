@@ -77,7 +77,8 @@ header nav {
   text-transform: uppercase;
   font-weight: 800;
 }
-#menubrop,
+.nav-menu-checkbox,
+.mobile-nav-backdrop,
 .NavMenu li input,
 .NavMenuLogo,
 .bartoggle,
@@ -97,7 +98,6 @@ header nav {
   display: flex;
   font-size: 14px;
   padding: 10px 10px;
-  text-transform: capitalize;
 }
 .NavMenu li a:hover {
   background: #005224;
@@ -158,12 +158,16 @@ header nav {
   right: 100%;
   top: 0;
 }
-@media (min-width: 1100px) {
+@media (min-width: 1101px) {
+  .mobile-nav-panel {
+    display: contents;
+  }
   .NavMenu li ul li a:hover {
     border-left: 2px solid #005224;
   }
   .NavMenu li ul li:hover > ul,
   .NavMenu li:hover > ul {
+    display: flex;
     visibility: visible;
     opacity: 1;
     transform: translateY(0);
@@ -171,6 +175,9 @@ header nav {
     -moz-transform: translateY(0);
     -ms-transform: translateY(0);
     -o-transform: translateY(0);
+  }
+  .NavMenu li ul.dps-submenu {
+    display: flex;
   }
 }
 @media (max-width: 1100px) {
@@ -186,74 +193,143 @@ header nav {
     font-size: 40px;
     align-items: center;
     cursor: pointer;
+    z-index: 10002;
   }
-  .NavMenu {
-    width: 500px;
-    flex: 12;
-    position: fixed;
-    flex-direction: column;
-    background-color: #003618;
-    left: 0;
-    top: 82px;
-    height: 100vh;
-    z-index: 10;
-    justify-content: start;
-    overflow-y: scroll;
-    transition: 0.5s;
-    -webkit-transition: 0.5s;
-    -moz-transition: 0.5s;
-    -ms-transition: 0.5s;
-    -o-transition: 0.5s;
-    transform: translateX(-100%);
-    -webkit-transform: translateX(-100%);
-    -moz-transform: translateX(-100%);
-    -ms-transform: translateX(-100%);
-    -o-transform: translateX(-100%);
-  }
-  .NavMenu li ul,
-  .NavMenu li ul li ul {
-    position: initial;
-    left: 0;
-    visibility: visible;
-    opacity: 1;
-    top: 0;
+  .nav-menu-checkbox {
     display: none;
   }
-  .NavMenu li a {
-    padding: 12px 15px;
-    border-bottom: 1px solid #fff;
-    color: #fff;
+  .mobile-nav-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 10000;
+    cursor: pointer;
   }
-  .NavMenu li ul li ul {
-    position: inherit;
-    margin-top: -10px;
+  .nav-menu-checkbox:checked ~ .mobile-nav-backdrop {
+    display: block;
   }
-  .NavMenu li ul li ul li a {
-    font-size: 16px;
-    color: #000;
-    font-weight: 400;
-    text-transform: initial;
-    padding: 7px 15px 7px 30px;
-  }
-  .NavMenu li a label::after {
-    right: 10px;
-  }
-  .NavMenu li input:checked + ul,
-  .NavMenu li ul li input:checked + ul {
+  .mobile-nav-panel {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: min(500px, 100%);
+    height: 100vh;
+    height: 100dvh;
+    z-index: 10001;
+    background-color: #003618;
     display: flex;
     flex-direction: column;
-    margin-bottom: 15px;
+    overflow: hidden;
+    transform: translateX(-100%);
+    transition: transform 0.35s ease;
+    -webkit-transition: transform 0.35s ease;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
   }
-  input:checked + .NavMenu {
+  .nav-menu-checkbox:checked ~ .mobile-nav-panel {
     transform: translateX(0);
-    -webkit-transform: translateX(0);
-    -moz-transform: translateX(0);
-    -ms-transform: translateX(0);
-    -o-transform: translateX(0);
+  }
+  .mobile-nav-panel .NavMenuLogo {
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  .NavMenu {
+    width: 100%;
+    flex: 1;
+    position: static;
+    flex-direction: column;
+    background-color: transparent;
+    justify-content: flex-start;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    transform: none;
+    padding-bottom: 2rem;
+  }
+  .NavMenu > li {
+    display: block;
+    width: 100%;
+  }
+  .NavMenu > li > a {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 15px;
+  }
+  .NavMenu > li > a.dps-menu-toggle.is-open {
+    background: #004d28;
+    color: #fed72b;
+  }
+  .NavMenu li ul.dps-submenu {
+    position: static;
+    left: auto;
+    right: auto;
+    top: auto;
+    min-width: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    transform: none;
+    visibility: visible;
+    opacity: 1;
+    display: none;
+    flex-direction: column;
+    background: #fff;
+  }
+  .NavMenu li ul.dps-submenu.is-open {
+    display: flex;
+  }
+  .NavMenu li ul.dps-submenu li {
+    display: block;
+    width: 100%;
+  }
+  .NavMenu li ul.dps-submenu li > a {
+    color: #1a1a1a !important;
+    background: #fff;
+    border-bottom: 1px solid #e8e8e8;
+    border-left: none;
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: none;
+    justify-content: flex-start;
+  }
+  .NavMenu li ul.dps-submenu li > a.dps-menu-toggle {
+    background: #f3f7f4;
+    color: #003618 !important;
+    font-weight: 600;
+    justify-content: space-between;
+  }
+  .NavMenu li ul.dps-submenu li > a.dps-menu-toggle.is-open {
+    background: #e6f0ea;
+    color: #005224 !important;
+  }
+  .NavMenu li ul.dps-submenu li > a .dps-menu-chevron {
+    fill: #003618 !important;
+  }
+  .NavMenu li ul.dps-submenu[data-depth="2"] li > a {
+    padding-left: 28px;
+  }
+  .NavMenu li ul.dps-submenu[data-depth="3"] li > a {
+    padding-left: 40px;
+  }
+  .NavMenu li ul.dps-submenu[data-depth="4"] li > a,
+  .NavMenu li ul.dps-submenu[data-depth="5"] li > a {
+    padding-left: 52px;
+  }
+  .NavMenu .dps-menu-toggle.is-open .dps-menu-chevron {
+    transform: rotate(180deg);
+  }
+  body:has(#menubrop:checked) #openPopupMobile {
+    visibility: hidden;
+    pointer-events: none;
   }
 }
 @media (max-width: 768px) {
-  .NavMenu {
+  .mobile-nav-panel {
     width: 100%;
   }
   header nav {
@@ -295,17 +371,19 @@ header nav {
     width: 200px;
   }
 }
-@media only screen and (min-width: 200px) and (max-width: 1100px) {
-  .onMobileEffect {
-    position: fixed;
-    z-index: 999;
+
+@media (max-width: 640px) {
+  #testimonials,
+  #testimonials > div {
     width: 100%;
-    height: 100px;
-    top: 0;
-    right: 0;
-    -webkit-transition: 0.5s;
-    -moz-transition: 0.5s;
-    -ms-transition: 0.5s;
-    -o-transition: 0.5s;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  #testimonials .Testimonials .glide__slides > li {
+    box-sizing: border-box;
+    flex-shrink: 0;
   }
 }

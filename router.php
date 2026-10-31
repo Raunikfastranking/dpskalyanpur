@@ -1,5 +1,5 @@
 <?php
-// Local dev router for `php -S localhost:8000 router.php`
+// Local dev router for `php -S 127.0.0.1:8011 router.php`
 // .htaccess ke rewrite rules emulate karta hai — PRODUCTION me use mat karo (Apache .htaccess use karta hai)
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -57,6 +57,5 @@ if ($cleanPath === '/hostel-overview-dpskalyanpur') {
     return true;
 }
 
-// Kuch na mila -> 404 page
 http_response_code(404);
 require __DIR__ . '/404.php';

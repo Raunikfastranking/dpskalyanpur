@@ -17,7 +17,7 @@ include "includes/apis.php";
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js" defer></script>
 </head>
 
-<body>
+<body class="homepage-video-hero">
 
     <?php include "includes/header.php" ?>
 
@@ -472,6 +472,37 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
     ?>
 
     <style>
+        body.homepage-video-hero .heroSlider[data-video-hero="true"] {
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
+        }
+
+        @media (min-width: 1101px) {
+            body.homepage-video-hero header {
+                position: absolute;
+                top: 32px;
+                left: 0;
+                z-index: 30;
+                background: transparent;
+                box-shadow: none;
+            }
+
+            body.homepage-video-hero header .NavMenu > li > a {
+                color: #fff;
+                font-weight: 600;
+                font-size: 16px;
+            }
+
+            body.homepage-video-hero header .NavMenu > li > a .dps-menu-chevron {
+                fill: #fff;
+            }
+
+            body.homepage-video-hero .hero-video-frame {
+                height: calc(31.25vw + 90px);
+                aspect-ratio: auto;
+            }
+        }
+
         .heroSlider video::-webkit-media-controls,
         .heroSlider video::-webkit-media-controls-enclosure,
         .heroSlider video::-webkit-media-controls-panel,

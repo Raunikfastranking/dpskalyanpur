@@ -827,6 +827,8 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
                             $cta_data = $home_data['data']['sections'][1]['resolved_content']['media'] ?? [];
                             if(!empty($cta_data)){
                             foreach ($cta_data as $data) {
+                                $cta_heading = html_entity_decode(strip_tags($data['heading'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                                $cta_heading = trim(preg_replace('/[\s\x{00A0}]+/u', ' ', $cta_heading));
                             ?>
                             <li>
                                 <a href="<?= $data['redirect_url']; ?>"
@@ -838,7 +840,7 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
   decoding="async">
                                     <span
                                         class="font-[600] text-[13px] sm:text-[16px] text-blue-main group-hover:text-white mt-2 sm:mt-0 sm:ml-2 text-center sm:text-left">
-                                        <?= $data['heading']; ?>
+                                        <?= htmlspecialchars($cta_heading, ENT_QUOTES, 'UTF-8'); ?>
                                     </span>
                                 </a>
                             </li>

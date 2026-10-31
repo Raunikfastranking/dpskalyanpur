@@ -524,10 +524,23 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
                 margin-left: calc(50% - 50vw);
             }
 
+            body.homepage-video-hero header {
+                position: absolute;
+                top: 45px;
+                left: 0;
+                z-index: 30;
+                background: transparent;
+                box-shadow: none;
+            }
+
+            body.homepage-video-hero header .bartoggle {
+                color: #fff;
+            }
+
             .heroSlider[data-video-hero="true"] .hero-video-frame {
-                height: 50vh;
-                height: 50svh;
-                min-height: 220px;
+                height: calc(50vh + 102px);
+                height: calc(50svh + 102px);
+                min-height: 322px;
                 aspect-ratio: auto !important;
             }
 

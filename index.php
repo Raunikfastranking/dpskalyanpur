@@ -479,12 +479,13 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
 
         @media (min-width: 1101px) {
             body.homepage-video-hero header {
-                position: absolute;
+                position: fixed;
                 top: 32px;
                 left: 0;
                 z-index: 30;
                 background: transparent;
                 box-shadow: none;
+                transition: top 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
             }
 
             body.homepage-video-hero header .NavMenu > li > a {
@@ -500,6 +501,38 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
             body.homepage-video-hero .hero-video-frame {
                 height: calc(31.25vw + 90px);
                 aspect-ratio: auto;
+            }
+        }
+
+        body.homepage-video-hero header.hero-video-header-scrolled {
+            top: 0;
+            background: #fff;
+            box-shadow: 2px 2px 5px #b6b6b636, -2px -2px 2px #fff;
+        }
+
+        body.homepage-video-hero header.hero-video-header-scrolled .bartoggle {
+            color: #003618;
+        }
+
+        @media (min-width: 1101px) {
+            body.homepage-video-hero header.hero-video-header-scrolled .NavMenu > li > a {
+                color: #003618;
+            }
+
+            body.homepage-video-hero header.hero-video-header-scrolled .NavMenu > li > a .dps-menu-chevron {
+                fill: #003618;
+            }
+        }
+
+        @media (min-width: 1101px) {
+            body.homepage-video-hero header .NavMenu > li:hover > a,
+            body.homepage-video-hero header .NavMenu > li > a:hover {
+                color: #FED72B !important;
+            }
+
+            body.homepage-video-hero header .NavMenu > li:hover > a .dps-menu-chevron,
+            body.homepage-video-hero header .NavMenu > li > a:hover .dps-menu-chevron {
+                fill: #FED72B !important;
             }
         }
 
@@ -524,10 +557,24 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
                 margin-left: calc(50% - 50vw);
             }
 
+            body.homepage-video-hero header {
+                position: fixed;
+                top: 45px;
+                left: 0;
+                z-index: 30;
+                background: transparent;
+                box-shadow: none;
+                transition: top 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            body.homepage-video-hero header .bartoggle {
+                color: #fff;
+            }
+
             .heroSlider[data-video-hero="true"] .hero-video-frame {
-                height: 50vh;
-                height: 50svh;
-                min-height: 220px;
+                height: calc(50vh + 102px);
+                height: calc(50svh + 102px);
+                min-height: 322px;
                 aspect-ratio: auto !important;
             }
 
@@ -699,6 +746,23 @@ $showPopup = !empty(trim($image)); // show popup only if image exists
             <?php if ($heroVideoUrl) { ?>
                 <script>
                     (() => {
+                        const homepageHeader = document.querySelector('body.homepage-video-hero header');
+                        const updateHomepageHeader = () => {
+                            const isMobileOverlay = window.matchMedia('(max-width: 640px)').matches;
+                            const overlayIsActive = isMobileOverlay || window.matchMedia('(min-width: 1101px)').matches;
+                            const topbarHeight = isMobileOverlay ? 45 : 32;
+                            homepageHeader?.classList.toggle(
+                                'hero-video-header-scrolled',
+                                overlayIsActive && window.scrollY > topbarHeight
+                            );
+                        };
+
+                        if (homepageHeader) {
+                            updateHomepageHeader();
+                            window.addEventListener('scroll', updateHomepageHeader, { passive: true });
+                            window.addEventListener('resize', updateHomepageHeader);
+                        }
+
                         const isMobileHero = window.matchMedia('(max-width: 640px)').matches;
                         const frame = document.querySelector('.heroSlider[data-video-hero="true"] .hero-video-iframe');
                         const video = document.querySelector('.heroSlider[data-video-hero="true"] video');

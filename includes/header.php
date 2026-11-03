@@ -141,15 +141,196 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
     /* position: fixed; inset-0; ... */
 
     overflow-y: auto;
+    overflow-x: hidden;
+    align-items: center !important;
     -webkit-overflow-scrolling: touch;
     padding: 1rem;
 }
 
 /* Better: let the inner white box scroll instead of the overlay */
 #popupForm > div {   /* the bg-white one */
-    max-height: 90vh;           /* ← very important */
+    width: min(448px, calc(100vw - 32px));
+    max-width: 448px;
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
+    margin: 0 !important;
+    overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+}
+
+.ee-form-popup-title {
+    margin: 0 0 20px;
+    color: #111827;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+#ee-form-3,
+#ee-form-3 * {
+    box-sizing: border-box !important;
+    font-family: Arial, sans-serif !important;
+}
+
+#ee-form-3,
+#ee-form-3 .ee-container,
+#ee-form-3 .ee-form-widget,
+#ee-form-3 .ee-form-widget-form,
+#ee-form-3 .ee-form-body,
+#ee-form-3 form {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+}
+
+#ee-form-3 .ee-form-heading {
+    display: none !important;
+}
+
+#ee-form-3 .ee-form-body > .ee-row {
+    margin: 0 0 16px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    min-width: 0 !important;
+}
+
+#ee-form-3 input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="tel"]),
+#ee-form-3 select,
+#ee-form-3 textarea {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 8px 10px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 5px !important;
+    color: #6b7280 !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+}
+
+#ee-form-3 .ee-form-widget select {
+    height: 42px !important;
+    padding: 0 10px !important;
+    line-height: normal !important;
+}
+
+#ee-form-3 .select2-container {
+    width: 100% !important;
+}
+
+#ee-form-3 .select2-container--default .select2-selection--single {
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    height: 42px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 5px !important;
+}
+
+#ee-form-3 .select2-container--default .select2-selection--single .select2-selection__rendered {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+    padding: 0 10px !important;
+    color: #6b7280 !important;
+    font-size: 16px !important;
+    line-height: normal !important;
+}
+
+#ee-form-3 .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 40px !important;
+}
+
+#ee-form-3 .inline-inputs {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    gap: 0 !important;
+}
+
+#ee-form-3 .inline-inputs > .countryCode-input {
+    flex: 0 0 78px !important;
+    width: 78px !important;
+    min-width: 78px !important;
+    height: 42px !important;
+}
+
+#ee-form-3 .inline-inputs .iti {
+    flex: 1 1 0 !important;
+    width: calc(100% - 78px) !important;
+    min-width: 0 !important;
+}
+
+#ee-form-3 .iti input,
+#ee-form-3 input[type="tel"] {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 8px 10px 8px 86px !important;
+    font-size: 16px !important;
+}
+
+#ee-form-3 .captchaContainer {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    gap: 16px !important;
+}
+
+#ee-form-3 .captchaContainer > .cpatcha {
+    display: flex !important;
+    flex: 0 0 141px !important;
+    align-items: center !important;
+    width: 141px !important;
+    height: 34px !important;
+}
+
+#ee-form-3 .captchaContainer > .ee-row {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+
+#ee-form-3 .captchaContainer > .ee-row [class*="col-"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+}
+
+#ee-form-3 .ee-form-widget label {
+    color: #4b5563 !important;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+}
+
+#ee-form-3 input[type="checkbox"] {
+    width: 16px !important;
+    height: 16px !important;
+    accent-color: #003618;
+}
+
+#ee-form-3 .btn-submit:not(.btn-send-otp) {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-height: 40px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #003618 !important;
+    border-radius: 4px !important;
+    background-color: #003618 !important;
+    color: #fff !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+}
+
+body > .jquery-modal:has(.ee-form-widget-feedback) {
+    z-index: 10000 !important;
 }
 </style>
 
@@ -164,13 +345,14 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
     Form submitted successfully!
 </div>
 <div id="popupForm" class="fixed inset-0 bg-black/60 flex items-start md:items-center justify-center z-[9998] overflow-y-auto hidden">
-    <div class="bg-white p-5 sm:p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4 my-8 md:my-0 relative">
+    <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md my-8 md:my-0 relative">
 
         <!-- Close Button – bigger hit area, better contrast -->
         <button id="closePopup" class="absolute top-3 right-3 md:top-4 md:right-4 text-gray-600 hover:text-red-600 text-3xl font-bold leading-none z-10 w-10 h-10 flex items-center justify-center">
             ×
         </button>
 
+        <div class="hidden">
         <h2 class="text-xl sm:text-2xl font-semibold mb-5">Enquiry Form</h2>
      <form id="enquiryForm" class="space-y-4 sm:space-y-5">
             <div>
@@ -331,9 +513,37 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
             <button type="submit" id="submitBtn"
                 class="w-full py-2 bg-blue-main text-white rounded-md hover:[#FED72B] transition">Submit</button>
         </form>
-        
+        </div>
+        <h2 class="ee-form-popup-title">Enquiry Form</h2>
+        <div id="ee-form-3" style="width: 100%; box-sizing: border-box;"></div>
     </div>
 </div>
+
+<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        const formContainer = document.getElementById("ee-form-3");
+        if (!formContainer) return;
+
+        window.ee_form_widget_baseurl = "https://eeconfigstaticfiles.blob.core.windows.net/staticfiles/ee-form-widget/";
+        if (!document.getElementById("__formWidgetCss")) {
+            const css = document.createElement("link");
+            css.id = "__formWidgetCss";
+            css.rel = "stylesheet";
+            css.href = window.ee_form_widget_baseurl + "css/stylesheet.min.css";
+            css.type = "text/css";
+            document.head.appendChild(css);
+        }
+
+        const widgetScript = document.createElement("script");
+        widgetScript.type = "text/javascript";
+        widgetScript.onload = async function() {
+            window._eeFormWidget = new eeFormWidget();
+            await window._eeFormWidget.init("superhouseeducation", "form-3", "ee-form-3");
+        };
+        widgetScript.src = window.ee_form_widget_baseurl + "js/eeFormWidget.min.js";
+        document.head.appendChild(widgetScript);
+    });
+</script>
 
 <?php
 $headerPhoneNumbers = preg_split(

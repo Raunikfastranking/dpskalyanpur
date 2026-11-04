@@ -112,6 +112,15 @@ $pageDataMap = [
 
 ];
 $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
+
+$dpsHeaderLogoUrl = 'https://dps.allenhouseschools.com/upload/images/1759335143_AONKJFjio6pQUZ1wq39Fg5T483Hp1HBsRNqOkvDI.png';
+foreach (($header_footer_data ?? []) as $layoutPart) {
+    $layoutMeta = $layoutPart['meta_data'] ?? [];
+    if (!empty($layoutMeta['logo_url'])) {
+        $dpsHeaderLogoUrl = $layoutMeta['logo_url'];
+        break;
+    }
+}
 ?>
 
 
@@ -168,7 +177,9 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
 }
 
 #ee-form-3,
-#ee-form-3 * {
+#ee-form-3 *,
+.dps-ee-form,
+.dps-ee-form * {
     box-sizing: border-box !important;
     font-family: Arial, sans-serif !important;
 }
@@ -178,7 +189,13 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
 #ee-form-3 .ee-form-widget,
 #ee-form-3 .ee-form-widget-form,
 #ee-form-3 .ee-form-body,
-#ee-form-3 form {
+#ee-form-3 form,
+.dps-ee-form,
+.dps-ee-form .ee-container,
+.dps-ee-form .ee-form-widget,
+.dps-ee-form .ee-form-widget-form,
+.dps-ee-form .ee-form-body,
+.dps-ee-form form {
     width: 100% !important;
     max-width: none !important;
     margin: 0 !important;
@@ -186,11 +203,13 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
     min-width: 0 !important;
 }
 
-#ee-form-3 .ee-form-heading {
+#ee-form-3 .ee-form-heading,
+.dps-ee-form .ee-form-heading {
     display: none !important;
 }
 
-#ee-form-3 .ee-form-body > .ee-row {
+#ee-form-3 .ee-form-body > .ee-row,
+.dps-ee-form .ee-form-body > .ee-row {
     margin: 0 0 16px !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
@@ -199,7 +218,10 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
 
 #ee-form-3 input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="tel"]),
 #ee-form-3 select,
-#ee-form-3 textarea {
+#ee-form-3 textarea,
+.dps-ee-form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="tel"]),
+.dps-ee-form select,
+.dps-ee-form textarea {
     box-sizing: border-box !important;
     width: 100% !important;
     height: 42px !important;
@@ -212,17 +234,20 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
     line-height: 24px !important;
 }
 
-#ee-form-3 .ee-form-widget select {
+#ee-form-3 .ee-form-widget select,
+.dps-ee-form .ee-form-widget select {
     height: 42px !important;
     padding: 0 10px !important;
     line-height: normal !important;
 }
 
-#ee-form-3 .select2-container {
+#ee-form-3 .select2-container,
+.dps-ee-form .select2-container {
     width: 100% !important;
 }
 
-#ee-form-3 .select2-container--default .select2-selection--single {
+#ee-form-3 .select2-container--default .select2-selection--single,
+.dps-ee-form .select2-container--default .select2-selection--single {
     box-sizing: border-box !important;
     display: flex !important;
     align-items: center !important;
@@ -231,7 +256,8 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
     border-radius: 5px !important;
 }
 
-#ee-form-3 .select2-container--default .select2-selection--single .select2-selection__rendered {
+#ee-form-3 .select2-container--default .select2-selection--single .select2-selection__rendered,
+.dps-ee-form .select2-container--default .select2-selection--single .select2-selection__rendered {
     display: flex !important;
     align-items: center !important;
     height: 100% !important;
@@ -241,32 +267,38 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
     line-height: normal !important;
 }
 
-#ee-form-3 .select2-container--default .select2-selection--single .select2-selection__arrow {
+#ee-form-3 .select2-container--default .select2-selection--single .select2-selection__arrow,
+.dps-ee-form .select2-container--default .select2-selection--single .select2-selection__arrow {
     height: 40px !important;
 }
 
-#ee-form-3 .inline-inputs {
+#ee-form-3 .inline-inputs,
+.dps-ee-form .inline-inputs {
     display: flex !important;
     align-items: center !important;
     width: 100% !important;
     gap: 0 !important;
 }
 
-#ee-form-3 .inline-inputs > .countryCode-input {
+#ee-form-3 .inline-inputs > .countryCode-input,
+.dps-ee-form .inline-inputs > .countryCode-input {
     flex: 0 0 78px !important;
     width: 78px !important;
     min-width: 78px !important;
     height: 42px !important;
 }
 
-#ee-form-3 .inline-inputs .iti {
+#ee-form-3 .inline-inputs .iti,
+.dps-ee-form .inline-inputs .iti {
     flex: 1 1 0 !important;
     width: calc(100% - 78px) !important;
     min-width: 0 !important;
 }
 
 #ee-form-3 .iti input,
-#ee-form-3 input[type="tel"] {
+#ee-form-3 input[type="tel"],
+.dps-ee-form .iti input,
+.dps-ee-form input[type="tel"] {
     box-sizing: border-box !important;
     width: 100% !important;
     min-width: 0 !important;
@@ -276,14 +308,16 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
     font-size: 16px !important;
 }
 
-#ee-form-3 .captchaContainer {
+#ee-form-3 .captchaContainer,
+.dps-ee-form .captchaContainer {
     display: flex !important;
     align-items: center !important;
     width: 100% !important;
     gap: 16px !important;
 }
 
-#ee-form-3 .captchaContainer > .cpatcha {
+#ee-form-3 .captchaContainer > .cpatcha,
+.dps-ee-form .captchaContainer > .cpatcha {
     display: flex !important;
     flex: 0 0 141px !important;
     align-items: center !important;
@@ -291,32 +325,37 @@ $pageData = $pageDataMap[$currentPage] ?? null; // null if page not found
     height: 34px !important;
 }
 
-#ee-form-3 .captchaContainer > .ee-row {
+#ee-form-3 .captchaContainer > .ee-row,
+.dps-ee-form .captchaContainer > .ee-row {
     flex: 1 1 0 !important;
     width: auto !important;
     min-width: 0 !important;
     margin: 0 !important;
 }
 
-#ee-form-3 .captchaContainer > .ee-row [class*="col-"] {
+#ee-form-3 .captchaContainer > .ee-row [class*="col-"],
+.dps-ee-form .captchaContainer > .ee-row [class*="col-"] {
     width: 100% !important;
     max-width: 100% !important;
     flex: 1 1 auto !important;
 }
 
-#ee-form-3 .ee-form-widget label {
+#ee-form-3 .ee-form-widget label,
+.dps-ee-form .ee-form-widget label {
     color: #4b5563 !important;
     font-size: 12px !important;
     line-height: 1.5 !important;
 }
 
-#ee-form-3 input[type="checkbox"] {
+#ee-form-3 input[type="checkbox"],
+.dps-ee-form input[type="checkbox"] {
     width: 16px !important;
     height: 16px !important;
     accent-color: #003618;
 }
 
-#ee-form-3 .btn-submit:not(.btn-send-otp) {
+#ee-form-3 .btn-submit:not(.btn-send-otp),
+.dps-ee-form .btn-submit:not(.btn-send-otp) {
     box-sizing: border-box !important;
     width: 100% !important;
     min-height: 40px !important;
@@ -515,14 +554,14 @@ body > .jquery-modal:has(.ee-form-widget-feedback) {
         </form>
         </div>
         <h2 class="ee-form-popup-title">Enquiry Form</h2>
-        <div id="ee-form-3" style="width: 100%; box-sizing: border-box;"></div>
+        <div id="ee-form-3" class="dps-ee-form" data-ee-org="superhouseeducation" data-ee-form="form-3" style="width: 100%; box-sizing: border-box;"></div>
     </div>
 </div>
 
 <script>
     window.addEventListener("DOMContentLoaded", function() {
-        const formContainer = document.getElementById("ee-form-3");
-        if (!formContainer) return;
+        const formHosts = Array.from(document.querySelectorAll("#ee-form-3, .dps-ee-form[id]"));
+        if (!formHosts.length) return;
 
         window.ee_form_widget_baseurl = "https://eeconfigstaticfiles.blob.core.windows.net/staticfiles/ee-form-widget/";
         if (!document.getElementById("__formWidgetCss")) {
@@ -534,14 +573,36 @@ body > .jquery-modal:has(.ee-form-widget-feedback) {
             document.head.appendChild(css);
         }
 
-        const widgetScript = document.createElement("script");
-        widgetScript.type = "text/javascript";
-        widgetScript.onload = async function() {
-            window._eeFormWidget = new eeFormWidget();
-            await window._eeFormWidget.init("superhouseeducation", "form-3", "ee-form-3");
+        const initHosts = async function() {
+            for (const host of formHosts) {
+                if (!host.id || host.dataset.eeInitialized === "1") continue;
+                const org = host.getAttribute("data-ee-org") || "superhouseeducation";
+                const formKey = host.getAttribute("data-ee-form") || "form-3";
+                try {
+                    const widget = new eeFormWidget();
+                    await widget.init(org, formKey, host.id);
+                    host.dataset.eeInitialized = "1";
+                } catch (err) {
+                    console.error("Extra Edge form init failed for", host.id, err);
+                }
+            }
         };
-        widgetScript.src = window.ee_form_widget_baseurl + "js/eeFormWidget.min.js";
-        document.head.appendChild(widgetScript);
+
+        if (window.eeFormWidget) {
+            initHosts();
+            return;
+        }
+
+        if (!document.getElementById("__formWidgetJs")) {
+            const widgetScript = document.createElement("script");
+            widgetScript.id = "__formWidgetJs";
+            widgetScript.type = "text/javascript";
+            widgetScript.onload = initHosts;
+            widgetScript.src = window.ee_form_widget_baseurl + "js/eeFormWidget.min.js";
+            document.head.appendChild(widgetScript);
+        } else {
+            document.getElementById("__formWidgetJs").addEventListener("load", initHosts);
+        }
     });
 </script>
 
@@ -798,7 +859,7 @@ function renderMenu($items, $depth = 0)
 <header>
     <nav>
         <div class="logo">
-            <a href="/"><img src="https://myschool-assets.s3.ap-south-1.amazonaws.com/uploads/AONKJFjio6pQUZ1wq39Fg5T483Hp1HBsRNqOkvDI.png" class="w-44" alt=""></a>
+            <a href="/"><img src="<?= htmlspecialchars($dpsHeaderLogoUrl, ENT_QUOTES, 'UTF-8') ?>" class="w-44" alt="Delhi Public School, Kalyanpur"></a>
         </div>
         <label for="menubrop" class="bartoggle" aria-label="Open menu">≡</label>
         <input type="checkbox" id="menubrop" class="nav-menu-checkbox" aria-hidden="true">
@@ -806,7 +867,7 @@ function renderMenu($items, $depth = 0)
         <div class="mobile-nav-panel" id="mobileNavPanel">
             <div class="NavMenuLogo bg-white py-5 justify-between px-2">
                 <a href="/">
-                    <img src="https://myschool-assets.s3.ap-south-1.amazonaws.com/uploads/AONKJFjio6pQUZ1wq39Fg5T483Hp1HBsRNqOkvDI.png" class="w-[200px]" alt="">
+                    <img src="<?= htmlspecialchars($dpsHeaderLogoUrl, ENT_QUOTES, 'UTF-8') ?>" class="w-[200px]" alt="Delhi Public School, Kalyanpur">
                 </a>
                 <button type="button" id="closeMenu" aria-label="Close menu">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32">

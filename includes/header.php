@@ -368,6 +368,35 @@ foreach (($header_footer_data ?? []) as $layoutPart) {
     font-weight: 500 !important;
 }
 
+#popupForm > div {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+#popupForm #ee-form-3 .ee-form-body > .ee-row {
+    margin-bottom: 10px !important;
+}
+
+#popupForm #ee-form-3 input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+#popupForm #ee-form-3 select,
+#popupForm #ee-form-3 textarea,
+#popupForm #ee-form-3 .inline-inputs > .countryCode-input,
+#popupForm #ee-form-3 .select2-container--default .select2-selection--single {
+    height: 36px !important;
+    min-height: 36px !important;
+}
+
+#popupForm #ee-form-3 input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+#popupForm #ee-form-3 select,
+#popupForm #ee-form-3 textarea {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+#popupForm #ee-form-3 .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 34px !important;
+}
+
 body > .jquery-modal:has(.ee-form-widget-feedback) {
     z-index: 10000 !important;
 }

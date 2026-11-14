@@ -828,3 +828,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 </script>
+
+<script>
+// CMS content tables: sirf table ko horizontally scrollable banao, page nahi
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("table").forEach(function (table) {
+        if (table.closest("header, footer, nav, #popupForm, .dps-table-scroll, .overflow-x-auto")) return;
+        var wrapper = document.createElement("div");
+        wrapper.className = "dps-table-scroll";
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+    });
+});
+</script>

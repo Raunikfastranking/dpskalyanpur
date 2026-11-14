@@ -15,6 +15,15 @@
   .whitespace-nowrap { white-space: nowrap; }
   .overflow-hidden { overflow: hidden; }
   .overflow-x-auto { overflow-x: auto; }
+  html, body { overflow-x: hidden; }
+  .dps-table-scroll { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .dps-table-scroll > table { min-width: 100%; }
+  @media (max-width: 767px) {
+    main h1, main h2, main h3, main h4, main h5, main h6 { font-size: 28px !important; line-height: 1.25 !important; }
+    main h1 [style*="font-size"], main h2 [style*="font-size"], main h3 [style*="font-size"],
+    main h4 [style*="font-size"], main h5 [style*="font-size"], main h6 [style*="font-size"] { font-size: inherit !important; }
+    main img { max-width: 100%; height: auto; }
+  }
   .list-none { list-style: none; margin: 0; padding: 0; }
   #esuccessPopup.hidden,
   #popupForm.hidden { display: none !important; }

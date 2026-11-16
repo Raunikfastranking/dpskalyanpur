@@ -831,13 +831,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <script>
 // CMS content tables: sirf table ko horizontally scrollable banao, page nahi
+// 4 ya kam columns wali table ko dps-table-fit do — screen pe fit ho jaye, scroll na lage
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll("table").forEach(function (table) {
-        if (table.closest("header, footer, nav, #popupForm, .dps-table-scroll, .overflow-x-auto")) return;
-        var wrapper = document.createElement("div");
-        wrapper.className = "dps-table-scroll";
-        table.parentNode.insertBefore(wrapper, table);
-        wrapper.appendChild(table);
+        var wrapper = table.closest(".dps-table-scroll");
+        if (!wrapper) {
+            if (table.closest("header, footer, nav, #popupForm, .overflow-x-auto")) return;
+            wrapper = document.createElement("div");
+            wrapper.className = "dps-table-scroll";
+            table.parentNode.insertBefore(wrapper, table);
+            wrapper.appendChild(table);
+        }
+        var maxCols = 0;
+        for (var r = 0; r < table.rows.length; r++) {
+            if (table.rows[r].cells.length > maxCols) maxCols = table.rows[r].cells.length;
+        }
+        if (maxCols > 0 && maxCols <= 4) wrapper.classList.add("dps-table-fit");
     });
 });
 </script>

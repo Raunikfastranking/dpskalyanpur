@@ -18,11 +18,33 @@
   html, body { overflow-x: hidden; }
   .dps-table-scroll { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .dps-table-scroll > table { min-width: 100%; }
+  /* 4 ya kam columns wali table: scroll nahi, screen fit + centered */
+  .dps-table-fit { overflow-x: visible; }
+  .dps-table-fit > table {
+    width: 100% !important;
+    max-width: 900px !important;
+    min-width: 0 !important;
+    height: auto !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    table-layout: auto;
+    border-collapse: collapse;
+  }
+  .dps-table-fit th, .dps-table-fit td {
+    padding: 10px 12px !important;
+    white-space: normal !important;
+    word-break: break-word;
+    vertical-align: middle;
+    text-align: center;
+  }
   @media (max-width: 767px) {
     main h1, main h2, main h3, main h4, main h5, main h6 { font-size: 28px !important; line-height: 1.25 !important; }
     main h1 [style*="font-size"], main h2 [style*="font-size"], main h3 [style*="font-size"],
     main h4 [style*="font-size"], main h5 [style*="font-size"], main h6 [style*="font-size"] { font-size: inherit !important; }
     main img { max-width: 100%; height: auto; }
+    main blockquote { margin-left: 0 !important; margin-right: 0 !important; }
+    .dps-table-fit > table { font-size: 14px; }
+    .dps-table-fit th, .dps-table-fit td { padding: 8px 10px !important; }
   }
   .list-none { list-style: none; margin: 0; padding: 0; }
   #esuccessPopup.hidden,

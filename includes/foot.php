@@ -482,6 +482,31 @@ const submitBtn = document.getElementById("submitBtn");
   });
 </script>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const enquiryPopup = document.getElementById("popupForm");
+    if (!enquiryPopup) return;
+
+    const observer = new MutationObserver(function(mutations) {
+      for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+          if (node.nodeType !== 1) continue;
+          const successPopup = node.matches && node.matches(".ee-form-widget-feedback.success")
+            ? node
+            : node.querySelector && node.querySelector(".ee-form-widget-feedback.success");
+          if (successPopup) {
+            enquiryPopup.classList.add("hidden");
+            enquiryPopup.style.display = "none";
+            return;
+          }
+        }
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+</script>
+
 
 <!-- <script>
   document.addEventListener("DOMContentLoaded", function() {

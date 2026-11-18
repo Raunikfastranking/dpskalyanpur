@@ -602,6 +602,25 @@ body > .jquery-modal:has(.ee-form-widget-feedback) {
             document.head.appendChild(css);
         }
 
+        // Ek hi page par do ee-form-3 widgets hone par captcha canvas id duplicate
+        // hoti hai (form-3-captchaCanvas) — getElementById pehla (popup) canvas
+        // pakad leta hai. Har host ke captcha instance ka refreshCaptcha patch karo
+        // taaki click usi form ke canvas ko redraw kare.
+        const patchCaptchaRefresh = function(host) {
+            const btn = host.querySelector(".refreshBtn");
+            if (!btn || !window.jQuery) return false;
+            const ref = window.jQuery(btn).data("classRef");
+            if (!ref || typeof ref.refreshCaptcha !== "function" || typeof ref.generateCaptcha !== "function") return false;
+            ref.refreshCaptcha = function() {
+                const canvas = host.querySelector('canvas[id$="-captchaCanvas"]');
+                if (!canvas) return;
+                const ctx = canvas.getContext("2d");
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                this.generateCaptcha(ctx);
+            };
+            return true;
+        };
+
         const initHosts = async function() {
             for (const host of formHosts) {
                 if (!host.id || host.dataset.eeInitialized === "1") continue;
@@ -611,6 +630,12 @@ body > .jquery-modal:has(.ee-form-widget-feedback) {
                     const widget = new eeFormWidget();
                     await widget.init(org, formKey, host.id);
                     host.dataset.eeInitialized = "1";
+                    if (!patchCaptchaRefresh(host)) {
+                        const poll = setInterval(() => {
+                            if (patchCaptchaRefresh(host)) clearInterval(poll);
+                        }, 300);
+                        setTimeout(() => clearInterval(poll), 15000);
+                    }
                 } catch (err) {
                     console.error("Extra Edge form init failed for", host.id, err);
                 }

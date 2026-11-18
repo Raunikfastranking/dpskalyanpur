@@ -57,5 +57,12 @@ if ($cleanPath === '/hostel-overview-dpskalyanpur') {
     return true;
 }
 
+// CMS pages when no local .php stub exists (web.config ke "CMS page template route" ke same)
+if (preg_match('#^/([A-Za-z0-9_-]+)/?$#', $path, $m)) {
+    $_GET['page'] = $m[1];
+    require __DIR__ . '/page-template.php';
+    return true;
+}
+
 http_response_code(404);
 require __DIR__ . '/404.php';

@@ -41,6 +41,12 @@ RewriteRule ^fee-structure-page-kalyanpur/?$ fee-structure.php [NC,L]
 RewriteRule ^documents-required-dpskalyanpur-admission/?$ admission-procedure.php [NC,L]
 RewriteRule ^annual-magazine/?$ magazine.php [NC,L]
 
+# CMS pages when no local .php stub exists (same as IIS web.config "CMS page template route")
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.php !-f
+RewriteRule ^([^/]+)/?$ page-template.php?page=$1 [NC,L,QSA]
+
 # Enable compression
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json

@@ -19,7 +19,7 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 # Redirect .php to clean URL (removes the .php extension) - skip proxy URLs
 RewriteCond %{THE_REQUEST} /([^.]+)\.php [NC]
 RewriteCond %{REQUEST_URI} !/proxy/ [NC]
-RewriteRule ^(.+)\.php$ $1 [R=301,L]
+RewriteRule ^ /%1 [R=301,L]
 
 # Canonical: /fee-structure -> CMS slug URL (slug is served via rewrite below)
 RewriteCond %{REQUEST_URI} ^(.*/)fee-structure/?$ [NC]
@@ -55,10 +55,10 @@ RewriteRule ^annual-magazine/?$ magazine.php [NC,L]
   ExpiresByType image/png "access plus 1 year"
   ExpiresByType image/webp "access plus 1 year"
   ExpiresByType image/svg+xml "access plus 1 year"
-  ExpiresByType text/css "access plus 1 year"  # Changed from 1 month to 1 year
-  ExpiresByType application/javascript "access plus 1 year"  # Changed from 1 month to 1 year
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
   ExpiresByType font/woff2 "access plus 1 year"
-  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/html "access plus 1 hour"
 </IfModule>
 
 <IfModule mod_headers.c>
@@ -67,9 +67,9 @@ RewriteRule ^annual-magazine/?$ magazine.php [NC,L]
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
   
-  # HTML/PHP - no browser cache (CMS updates turant dikhne ke liye)
+  # HTML/PHP - 1 hour cache
   <FilesMatch "\.(html|php)$">
-    Header set Cache-Control "no-cache, must-revalidate"
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
   </FilesMatch>
   
   # Enable ETags

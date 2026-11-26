@@ -200,7 +200,7 @@
         <div class="sm:mt-20 mt-10 mx-4 2xl:w-[1280px] lg:w-[1024px] md:w-[767px] sm:w-[640px] sm:mx-auto sm:px-5 px-4">
             <div class="relative">
                 <h2 class="text-center sm:text-[32px] text-[28px] font-[700] text-blue-main leading-9">
-                    Enquiry Form | Session 2025–2026
+                    Enquiry Form | Session 2027-2028
                 </h2>
                 <div class="mt-10">
                     <form id="enquiryForm" method="post">

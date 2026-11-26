@@ -482,6 +482,31 @@ const submitBtn = document.getElementById("submitBtn");
   });
 </script>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const enquiryPopup = document.getElementById("popupForm");
+    if (!enquiryPopup) return;
+
+    const observer = new MutationObserver(function(mutations) {
+      for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+          if (node.nodeType !== 1) continue;
+          const successPopup = node.matches && node.matches(".ee-form-widget-feedback.success")
+            ? node
+            : node.querySelector && node.querySelector(".ee-form-widget-feedback.success");
+          if (successPopup) {
+            enquiryPopup.classList.add("hidden");
+            enquiryPopup.style.display = "none";
+            return;
+          }
+        }
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+</script>
+
 
 <!-- <script>
   document.addEventListener("DOMContentLoaded", function() {
@@ -826,5 +851,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
     observer.observe(popup, { attributes: true, attributeFilter: ['class'] });
 
+});
+</script>
+
+<script>
+// CMS content tables: sirf table ko horizontally scrollable banao, page nahi
+// 4 ya kam columns wali table ko dps-table-fit do — screen pe fit ho jaye, scroll na lage
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("table").forEach(function (table) {
+        var wrapper = table.closest(".dps-table-scroll");
+        if (!wrapper) {
+            if (table.closest("header, footer, nav, #popupForm, .overflow-x-auto")) return;
+            wrapper = document.createElement("div");
+            wrapper.className = "dps-table-scroll";
+            table.parentNode.insertBefore(wrapper, table);
+            wrapper.appendChild(table);
+        }
+        var maxCols = 0;
+        for (var r = 0; r < table.rows.length; r++) {
+            if (table.rows[r].cells.length > maxCols) maxCols = table.rows[r].cells.length;
+        }
+        if (maxCols > 0 && maxCols <= 4) wrapper.classList.add("dps-table-fit");
+    });
 });
 </script>

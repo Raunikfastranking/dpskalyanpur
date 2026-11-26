@@ -1,7 +1,0 @@
-# Runtime cache
-includes/cache/
-
-# OS files
-Thumbs.db
-.DS_Store
-desktop.ini

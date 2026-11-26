@@ -368,6 +368,35 @@ foreach (($header_footer_data ?? []) as $layoutPart) {
     font-weight: 500 !important;
 }
 
+#popupForm > div {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+#popupForm #ee-form-3 .ee-form-body > .ee-row {
+    margin-bottom: 10px !important;
+}
+
+#popupForm #ee-form-3 input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+#popupForm #ee-form-3 select,
+#popupForm #ee-form-3 textarea,
+#popupForm #ee-form-3 .inline-inputs > .countryCode-input,
+#popupForm #ee-form-3 .select2-container--default .select2-selection--single {
+    height: 36px !important;
+    min-height: 36px !important;
+}
+
+#popupForm #ee-form-3 input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+#popupForm #ee-form-3 select,
+#popupForm #ee-form-3 textarea {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+#popupForm #ee-form-3 .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 34px !important;
+}
+
 body > .jquery-modal:has(.ee-form-widget-feedback) {
     z-index: 10000 !important;
 }
@@ -573,6 +602,25 @@ body > .jquery-modal:has(.ee-form-widget-feedback) {
             document.head.appendChild(css);
         }
 
+        // Ek hi page par do ee-form-3 widgets hone par captcha canvas id duplicate
+        // hoti hai (form-3-captchaCanvas) — getElementById pehla (popup) canvas
+        // pakad leta hai. Har host ke captcha instance ka refreshCaptcha patch karo
+        // taaki click usi form ke canvas ko redraw kare.
+        const patchCaptchaRefresh = function(host) {
+            const btn = host.querySelector(".refreshBtn");
+            if (!btn || !window.jQuery) return false;
+            const ref = window.jQuery(btn).data("classRef");
+            if (!ref || typeof ref.refreshCaptcha !== "function" || typeof ref.generateCaptcha !== "function") return false;
+            ref.refreshCaptcha = function() {
+                const canvas = host.querySelector('canvas[id$="-captchaCanvas"]');
+                if (!canvas) return;
+                const ctx = canvas.getContext("2d");
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                this.generateCaptcha(ctx);
+            };
+            return true;
+        };
+
         const initHosts = async function() {
             for (const host of formHosts) {
                 if (!host.id || host.dataset.eeInitialized === "1") continue;
@@ -582,6 +630,12 @@ body > .jquery-modal:has(.ee-form-widget-feedback) {
                     const widget = new eeFormWidget();
                     await widget.init(org, formKey, host.id);
                     host.dataset.eeInitialized = "1";
+                    if (!patchCaptchaRefresh(host)) {
+                        const poll = setInterval(() => {
+                            if (patchCaptchaRefresh(host)) clearInterval(poll);
+                        }, 300);
+                        setTimeout(() => clearInterval(poll), 15000);
+                    }
                 } catch (err) {
                     console.error("Extra Edge form init failed for", host.id, err);
                 }

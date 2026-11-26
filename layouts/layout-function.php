@@ -1,4 +1,16 @@
 <?php
+// Wrap CMS <table> markup in a scrollable container so wide tables
+// scroll horizontally instead of stretching the whole page on mobile
+function dps_wrap_tables($html)
+{
+    if (stripos($html, '<table') === false) return $html;
+    return preg_replace(
+        '/<table\b[\s\S]*?<\/table>/i',
+        '<div class="dps-table-scroll">$0</div>',
+        $html
+    );
+}
+
 function renderDynamicSections($pagesData, $api_url)
 {
     if (empty($pagesData['data']['sections'])) return;
@@ -21,7 +33,9 @@ function renderDynamicSections($pagesData, $api_url)
 
         // Include the layout or fallback to default
         if (file_exists($layoutFile)) {
+            ob_start();
             include $layoutFile;
+            echo dps_wrap_tables(ob_get_clean());
         } else {
             // Fallback: default layout if specific one not found
             $fallback = __DIR__ . "/layout_default.php";

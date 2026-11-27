@@ -37,10 +37,24 @@
     vertical-align: middle;
     text-align: center;
   }
+  .dps-cms-content, .dps-cms-section .dps-cms-content { max-width: 100%; }
+  .dps-cms-content img, .dps-cms-section img { max-width: 100%; height: auto; }
+  .dps-cms-content table { border-collapse: collapse; }
   @media (max-width: 767px) {
     main h1, main h2, main h3, main h4, main h5, main h6 { font-size: 28px !important; line-height: 1.25 !important; }
-    main h1 [style*="font-size"], main h2 [style*="font-size"], main h3 [style*="font-size"],
-    main h4 [style*="font-size"], main h5 [style*="font-size"], main h6 [style*="font-size"] { font-size: inherit !important; }
+    .dps-cms-content h1, .dps-cms-content h2, .dps-cms-content h3,
+    .dps-cms-content h4, .dps-cms-content h5, .dps-cms-content h6,
+    .dps-cms-section .dps-cms-content h1, .dps-cms-section .dps-cms-content h2,
+    .dps-cms-section .dps-cms-content h3, .dps-cms-section .dps-cms-content h4,
+    .dps-cms-section .dps-cms-content h5, .dps-cms-section .dps-cms-content h6 {
+      font-size: unset !important;
+      line-height: unset !important;
+    }
+    .dps-cms-content [style*="font-size"],
+    .dps-cms-section .dps-cms-content [style*="font-size"] {
+      font-size: revert !important;
+      line-height: revert !important;
+    }
     main img { max-width: 100%; height: auto; }
     main blockquote { margin-left: 0 !important; margin-right: 0 !important; }
     .dps-table-fit > table { font-size: 14px; }

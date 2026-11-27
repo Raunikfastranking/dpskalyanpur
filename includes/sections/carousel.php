@@ -10,9 +10,9 @@
             ?>
                 <li>
                     <img src="<?= $api_url ?>/<?= $items['image_url'] ?? '' ?>" alt="<?= ms_esc_image_alt($items, $items['title'] ?? '') ?>" class="w-[100%] rounded-[12px]">
-                    <div class="mt-2">
-                        <h2 class="text-[18px] font-[700] leading-5 text-blue-main"><?= $items['title'] ?? "" ?></h2>
-                        <p class="text-gray-600 text-[16px] mt-1"><?= $items['description'] ?? "" ?></p>
+                    <div class="mt-2 dps-cms-content">
+                        <?= $items['title'] ?? "" ?>
+                        <?= $items['description'] ?? "" ?>
                     </div>
                 </li>
             <?php } ?>

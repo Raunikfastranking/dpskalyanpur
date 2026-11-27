@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include "includes/apis.php";
 
 // ────────────────────────────────────────────────
@@ -39,10 +39,10 @@ usort($museGalleries, function ($a, $b) {
         <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px]">
             <div class="w-full">
                 <h1 class="text-[32px] sm:hidden block font-[700] text-white text-left pl-4 mb-5 sm:mb-8 hr-line relative leading-9">
-                    <?= htmlspecialchars(strip_tags($muse_data['data']['sections'][0]['content_heading'] ?? 'Muse Gallery')) ?>
+                    <?= $muse_data['data']['sections'][0]['content_heading'] ?? 'Muse Gallery' ?>
                 </h1>
                 <h1 class="sm:text-[32px] sm:block hidden font-[700] text-white text-left sm:mb-1 hr-line relative leading-9 ml-[7rem]">
-                    <?= htmlspecialchars(strip_tags($muse_data['data']['sections'][0]['content_heading'] ?? 'Muse Gallery')) ?>
+                    <?= $muse_data['data']['sections'][0]['content_heading'] ?? 'Muse Gallery' ?>
                 </h1>
             </div>
         </div>
@@ -67,7 +67,7 @@ usort($museGalleries, function ($a, $b) {
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                         </svg>
                         <a href="muse-gallery" class="ms-1 sm:text-sm text-xs font-medium text-blue-main">
-                            <?= htmlspecialchars(strip_tags($muse_data['data']['sections'][0]['content_heading'] ?? 'Muse Gallery')) ?>
+                            <?= $muse_data['data']['sections'][0]['content_heading'] ?? 'Muse Gallery' ?>
                         </a>
                     </div>
                 </li>

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include "includes/apis.php";
 
 // Optional debug: Uncomment to inspect data
@@ -27,10 +27,10 @@ include "includes/apis.php";
         <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px]">
             <div class="w-full">
                 <h1 class="text-[32px] sm:hidden block font-[700] text-white text-left pl-4 mb-5 hr-line relative leading-9">
-                    <?= htmlspecialchars(strip_tags($feestructure_data['data']['sections'][0]['content_heading'] ?? 'Fee Structure')) ?>
+                    <?= $feestructure_data['data']['sections'][0]['content_heading'] ?? 'Fee Structure' ?>
                 </h1>
                 <h2 class="sm:text-[32px] sm:block hidden font-[700] text-white text-left sm:mb-1 hr-line relative leading-9 ml-[7rem]">
-                    <?= htmlspecialchars(strip_tags($feestructure_data['data']['sections'][0]['content_heading'] ?? 'Fee Structure')) ?>
+                    <?= $feestructure_data['data']['sections'][0]['content_heading'] ?? 'Fee Structure' ?>
                 </h2>
             </div>
         </div>

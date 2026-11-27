@@ -7,8 +7,8 @@
     </div>
     <div class="comman-container-1050">
         <div class="text-center text-white pt-20">
-            <h3 class="flex justify-center gap-3 text-[20px] font-[400]"><img src="assets/images/icon-arrow-02.png" alt=""> <?= strip_tags($data['content_heading']) ?? "" ?> <img src="assets/images/icon-arrow-1.png" alt=""></h3>
-            <div>
+            <div class="dps-cms-content flex justify-center gap-3 text-[20px] font-[400] items-center"><img src="assets/images/icon-arrow-02.png" alt=""> <?= $data['content_heading'] ?? "" ?> <img src="assets/images/icon-arrow-1.png" alt=""></div>
+            <div class="dps-cms-content">
                 <?= $data['content'] ?? "" ?>
             </div>
         </div>

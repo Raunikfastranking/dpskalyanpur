@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../includes/cms-helpers.php';
+
 // Wrap CMS <table> markup in a scrollable container so wide tables
 // scroll horizontally instead of stretching the whole page on mobile
 function dps_wrap_tables($html)
@@ -35,7 +37,7 @@ function renderDynamicSections($pagesData, $api_url)
         if (file_exists($layoutFile)) {
             ob_start();
             include $layoutFile;
-            echo dps_wrap_tables(ob_get_clean());
+            echo '<div class="dps-cms-section">' . dps_wrap_tables(ob_get_clean()) . '</div>';
         } else {
             // Fallback: default layout if specific one not found
             $fallback = __DIR__ . "/layout_default.php";

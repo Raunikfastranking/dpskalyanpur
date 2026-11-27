@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include "includes/apis.php";
 
 // ────────────────────────────────────────────────
@@ -57,10 +57,10 @@ usort($superhouseGalleries, function ($a, $b) {
         <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px]">
             <div class="w-full">
                 <h1 class="text-[32px] sm:hidden block font-[700] text-white text-left pl-4 mb-5 sm:mb-8 hr-line relative leading-9">
-                    <?= htmlspecialchars(strip_tags($superhouse_education_data['data']['sections'][0]['content_heading'] ?? 'Superhouse Education Foundation Gallery')) ?>
+                    <?= $superhouse_education_data['data']['sections'][0]['content_heading'] ?? 'Superhouse Education Foundation Gallery' ?>
                 </h1>
                 <h1 class="sm:text-[32px] sm:block hidden font-[700] text-white text-left sm:mb-1 hr-line relative leading-9 ml-[7rem]">
-                    <?= htmlspecialchars(strip_tags($superhouse_education_data['data']['sections'][0]['content_heading'] ?? 'Superhouse Education Foundation Gallery')) ?>
+                    <?= $superhouse_education_data['data']['sections'][0]['content_heading'] ?? 'Superhouse Education Foundation Gallery' ?>
                 </h1>
             </div>
         </div>
@@ -85,7 +85,7 @@ usort($superhouseGalleries, function ($a, $b) {
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                         </svg>
                         <a href="superhouse-education-foundation" class="ms-1 sm:text-sm text-xs font-medium text-blue-main">
-                            <?= htmlspecialchars(strip_tags($superhouse_education_data['data']['sections'][0]['content_heading'] ?? 'Superhouse Education Foundation')) ?>
+                            <?= $superhouse_education_data['data']['sections'][0]['content_heading'] ?? 'Superhouse Education Foundation' ?>
                         </a>
                     </div>
                 </li>
@@ -148,7 +148,7 @@ usort($superhouseGalleries, function ($a, $b) {
                                 ?>
 
                                     <div class="gallery-item bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
-                                         data-title="<?= strtolower(htmlspecialchars(strip_tags($data['heading'] ?? ''))) ?>">
+                                         data-title="<?= strtolower($data['heading'] ?? '') ?>">
 
                                         <!-- Preview area (image or PDF icon) - links to detail page -->
                                         <a href="gallery-detail.php?id=<?= urlencode($data['id'] ?? '') ?>" class="block">
@@ -173,7 +173,7 @@ usort($superhouseGalleries, function ($a, $b) {
                                                     </div>
                                                     <div class="w-[70%]">
                                                         <h3 class="text-blue-main font-bold text-base mb-2 line-clamp-2">
-                                                            <?= htmlspecialchars(strip_tags($data['heading'] ?? 'Untitled Event')) ?>
+                                                            <?= $data['heading'] ?? 'Untitled Event' ?>
                                                         </h3>
                                                         <hr class="my-2">
                                                         <div class="text-xs text-gray-600 flex flex-wrap gap-3">

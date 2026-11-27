@@ -1,4 +1,4 @@
-<?php
+﻿<?php
  include "includes/apis.php";
 ?>
 <html lang="en">
@@ -21,14 +21,14 @@
             <div>
                 <h1
                     class="text-[32px] sm:hidden block font-[700] text-white text-left pl-4 mb-5 sm:mb-8 hr-line relative leading-9">
-                   <?= strip_tags($international_outbounds_data['data']['sections'][0]['content_heading']) ?? "" ?>
+                   <?= $international_outbounds_data['data']['sections'][0]['content_heading'] ?? "" ?>
                 </h1>
             </div>
 
             <div class="md:w-[100%]">
                 <h1
                     class="sm:text-[32px] sm:block hidden font-[700] text-white text-left sm:mb-1 hr-line relative leading-9 ml-[7rem]">
-                   <?= strip_tags($international_outbounds_data['data']['sections'][0]['content_heading']) ?? "" ?>
+                   <?= $international_outbounds_data['data']['sections'][0]['content_heading'] ?? "" ?>
                 </h1>
             </div>
         </div>
@@ -70,7 +70,7 @@
                                 d="m1 9 4-4-4-4"></path>
                         </svg>
                         <a href="international-outbounds"
-                            class="ms-1 text-sm font-medium text-blue-main"> <?= strip_tags($international_outbounds_data['data']['sections'][0]['content_heading']) ?? "" ?></a>
+                            class="ms-1 text-sm font-medium text-blue-main"> <?= $international_outbounds_data['data']['sections'][0]['content_heading'] ?? "" ?></a>
                     </div>
                 </li>
             </ol>

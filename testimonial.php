@@ -273,23 +273,38 @@ include "includes/apis.php";
                                             echo "<p>No data available</p>";
                                         } else {
                                             foreach ($videos as $video) {
-                                                $videoUrl = $video["media_url"] ?? '';
+                                                $videoUrl = trim($video["media_url"] ?? '');
                                                 $embedUrl = "";
+                                                $isFile = false;
 
-                                                if (strpos($videoUrl, 'youtube') !== false) {
-                                                    // Extract video ID
-                                                    preg_match('/(youtu\.be\/|v=)([^&]+)/', $videoUrl, $matches);
-                                                    $videoId = $matches[2] ?? '';
+                                                if (preg_match('#[?&]list=([A-Za-z0-9_-]+)#', $videoUrl, $matches) && !preg_match('#[?&]v=#', $videoUrl)) {
+                                                    $embedUrl = "https://www.youtube.com/embed/videoseries?list=" . $matches[1];
+                                                } elseif (preg_match('#(?:youtube\.com/(?:watch\?[^&]*v=|shorts/|embed/|live/|v/)|youtu\.be/)([A-Za-z0-9_-]{6,})#', $videoUrl, $matches)) {
+                                                    $embedUrl = "https://www.youtube.com/embed/" . $matches[1];
+                                                } elseif (preg_match('#vimeo\.com/(\d+)#', $videoUrl, $matches)) {
+                                                    $embedUrl = "https://player.vimeo.com/video/" . $matches[1];
+                                                } elseif (preg_match('#\.(mp4|webm|ogg|mov)(\?.*)?$#i', $videoUrl)) {
+                                                    $isFile = true;
+                                                }
 
-                                                    if ($videoId) {
-                                                        $embedUrl = "https://www.youtube.com/embed/" . $videoId;
-                                                    }
+                                                if (!$isFile && $embedUrl === "") {
+                                                    continue;
                                                 }
                                                 ?>
                                                 <li>
                                                     <div class="w-full rounded-2xl shadow-lg sm:p-5 p-2">
-                                                        <iframe class="w-[100%] h-[300px]" src="<?php echo $embedUrl; ?>"
-                                                            allowfullscreen></iframe>
+                                                        <?php if ($isFile) { ?>
+                                                            <video class="w-[100%] h-[300px]" src="<?php echo htmlspecialchars($videoUrl); ?>"
+                                                                controls></video>
+                                                        <?php } else { ?>
+                                                            <iframe class="w-[100%] h-[300px]" src="<?php echo htmlspecialchars($embedUrl); ?>"
+                                                                allowfullscreen></iframe>
+                                                        <?php } ?>
+                                                        <?php if (!empty($video["caption"])) { ?>
+                                                            <p class="mt-2 text-[14px] text-gray-600 text-center whitespace-normal">
+                                                                <?php echo strip_tags($video["caption"]); ?>
+                                                            </p>
+                                                        <?php } ?>
                                                     </div>
                                                 </li>
                                             <?php

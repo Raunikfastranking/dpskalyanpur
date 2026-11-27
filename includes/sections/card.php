@@ -8,9 +8,9 @@
                     <div class="">
                         <img src="<?= $api_url ?>/<?= $items['media_file'] ?? '' ?>" class="mx-auto animated-img" alt="<?= ms_esc_image_alt($items, trim(strip_tags($items['heading'] ?? '')) ?: 'Core value') ?>">
                     </div>
-                    <div class="text-center mt-5">
-                        <h2 class="text-[#2C4073] text-[24px]"><?= strip_tags($items['heading'] ?? '') ?></h2>
-                        <p class="text-[#70747F] text-[16px] mt-3 font-[300] mb-5 text-[18px]"><?= strip_tags($items['content'] ?? '') ?></p>
+                    <div class="text-center mt-5 dps-cms-content">
+                        <?= $items['heading'] ?? '' ?>
+                        <?= $items['content'] ?? '' ?>
                     </div>
                 </div>
             <?php } ?>

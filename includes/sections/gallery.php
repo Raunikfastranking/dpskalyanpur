@@ -21,8 +21,8 @@
                            </div>
                        </div>
                        <div class="mt-3">
-                           <h2 class="md:text-[24px] text-[22px] md:leading-7 leading-7">
-                               <?= strip_tags($items['heading']) ?? "No Title" ?></h2>
+                           <div class="dps-cms-content md:text-[24px] text-[22px] md:leading-7 leading-7">
+                               <?= $items['heading'] ?? "No Title" ?></div>
                            <!-- <a href="gallery-detail.php?id= " class="rounded-[20px] bg-[#096130] text-white w-[100%] block text-center h-[47px]  text-[17px] mt-[20px] transition-all hover:bg-[#c4171d] p-[10px]">
                                View More
                            </a> -->

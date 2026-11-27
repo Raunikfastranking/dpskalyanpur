@@ -10,13 +10,16 @@
     <?php if (!empty($data['columns'])): ?>
     <?php foreach ($data['columns'] as $column): ?>
     <div class="w-full">
-        <?php if ($column['content_type'] === 'image' && !empty($column['image_path'])): ?>
+        <?php
+        $columnImage = $column['image_path'] ?? $column['image_url'] ?? '';
+        if ($column['content_type'] === 'image' && $columnImage !== ''):
+        ?>
         <div data-aos="zoom-in-right" data-aos-duration="1000" class="aos-init aos-animate mb-6 mt-6">
-            <img src="<?= htmlspecialchars($column['image_path']); ?>"
+            <img src="<?= htmlspecialchars($columnImage, ENT_QUOTES, 'UTF-8'); ?>"
                 alt="<?= ms_esc_image_alt($column, 'section-image'); ?>" class="w-[100%] rounded-xl">
         </div>
         <?php elseif ($column['content_type'] === 'text' && !empty($column['content'])): ?>
-        <div class="text-content">
+        <div class="dps-cms-content text-content">
             <?= $column['content']; ?>
         </div>
         <?php endif; ?>

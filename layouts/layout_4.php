@@ -6,8 +6,8 @@
         <img src="assets/images/img/img-counter-01.png" class="md:w-[100%] w-[100px]" alt="Image Counter">
     </div>
     <div class="text-center text-white pt-10">
-        <h2 class="md:text-[45px] text-[32px] leading-11 mt-4 text-[#2C4073]"><?= strip_tags($data['content_heading']) ?? "" ?></h2>
-        <div>
+        <div class="dps-cms-content"><?= $data['content_heading'] ?? "" ?></div>
+        <div class="dps-cms-content">
             <?= $data['content'] ?? "" ?>
         </div>
     </div>

@@ -3,6 +3,7 @@ if (!defined('APIS_INCLUDED')) {
     define('APIS_INCLUDED', true);
 }
 require_once dirname(__DIR__) . '/proxy/config.php';
+require_once __DIR__ . '/cms-helpers.php';
 
 $api_url = "https://dps.allenhouseschools.com";
 

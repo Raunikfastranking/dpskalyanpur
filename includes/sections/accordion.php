@@ -12,7 +12,7 @@
              <div class="bg-[#003618]  rounded-[5px] shadow overflow-hidden ">
                  <button class="w-full flex items-center justify-between px-4 py-3 focus:outline-none heading-btn" aria-expanded="false">
                      <div class="flex items-center gap-3">
-                         <span class="font-medium text-white"><?= $items['title'] ?? "" ?> </span>
+                         <span class="font-medium text-white dps-cms-content"><?= $items['title'] ?? "" ?> </span>
                      </div>
                      <svg class="w-6 h-6 transform transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                          <path class="icon-plus" d="M12 5v14M5 12h14" />
@@ -20,7 +20,7 @@
                      </svg>
                  </button>
                  <div class="px-4 overflow-hidden content bg-white" style="max-height: 0; transition: max-height 300ms ease;">
-                     <div class="py-3 text-gray-700 overflow-x-auto">
+                     <div class="py-3 text-gray-700 overflow-x-auto dps-cms-content">
                          <?= $items['content'] ?? "" ?>
                      </div>
                  </div>

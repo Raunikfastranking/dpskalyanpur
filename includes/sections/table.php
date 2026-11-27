@@ -12,7 +12,7 @@
                          <?php
                             foreach ($data['resolved_content']['columns'] as $column) {
                             ?>
-                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"><?= $column['title'] ?? "NA" ?> </th>
+                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"><span class="dps-cms-content"><?= $column['title'] ?? "NA" ?></span> </th>
                          <?php } ?>
                      </tr>
 
@@ -27,8 +27,8 @@
                              <?php foreach ($row_data as $cell) {
                                 //  print_r($cell)
                                  ?>
-                                  <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
-                                     <?= htmlspecialchars($cell) ?>
+                                  <td class="px-4 py-4 text-sm text-gray-700 dps-cms-content">
+                                     <?= is_string($cell) ? $cell : htmlspecialchars((string) $cell) ?>
                                  </td>
                              <?php } ?>
                          </tr>

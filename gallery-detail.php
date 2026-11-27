@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include "includes/apis.php";
 
 $gallery = null;
@@ -128,7 +128,7 @@ $meta_keywords = $gallery['meta_keywords'] ?? $gallery['data']['meta_keywords'] 
         <div class="bg-center flex items-center text-center h-[300px] bg-[url('assets/images/building.webp')] bg-cover bg-no-repeat">
             <div class="w-full px-6">
                 <h1 class="text-3xl sm:text-4xl font-bold text-white drop-shadow-xl">
-                    <?= htmlspecialchars(strip_tags($page_title)) ?>
+                    <?= $page_title ?>
                 </h1>
             </div>
         </div>
@@ -191,11 +191,11 @@ $meta_keywords = $gallery['meta_keywords'] ?? $gallery['data']['meta_keywords'] 
                 <!-- Title & Description -->
                 <div class="text-center mb-12">
                    <h2 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-5">
-    <?= htmlspecialchars(strip_tags($page_title)) ?>
+    <?= $page_title ?>
 </h2>
                    <?php if ($description): ?>
     <div class="text-gray-600 max-w-3xl mx-auto leading-relaxed prose prose-gray">
-        <?= nl2br(htmlspecialchars(strip_tags($description))) ?>
+        <?= nl2br($description) ?>
     </div>
 <?php endif; ?>
                 </div>

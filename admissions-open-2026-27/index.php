@@ -491,7 +491,7 @@ include "api.php";
       <section class="yellow py-5 px-5 sm:py-[40px] sm:px-[100px]">
         <div class="mx-auto max-w-[1200px]">
           <h2 class="mb-10 text-center text-3xl font-bold text-[#014828] sm:text-[60px]">
-             <?= $landing_data['data']['sections'][7]['content_heading'] ?? "" ?>
+             <?= dps_cms_plain_text($landing_data['data']['sections'][7]['content_heading'] ?? "") ?>
           </h2>
           <div class="grid grid-cols-2 gap-5 sm:grid-cols-4">
   <?php 

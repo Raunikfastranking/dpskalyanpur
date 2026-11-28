@@ -35,7 +35,7 @@ include "includes/apis.php";
     <?php include "includes/header.php" ?>
 
     <div class="main relative">
-        <div class="bg-center flex items-center text-center h-[300px] brud-image bg-[url('assets/images/building.webp')]">
+        <div class="bg-center flex items-center text-center h-[300px] brud-image bg-[url('assets/images/building.webp')] bg-cover bg-no-repeat">
             <div>
                 <h1 class="text-[32px] sm:hidden block font-[700] text-white text-left pl-4 mb-5 sm:mb-8 hr-line relative leading-9">
                     School Awards

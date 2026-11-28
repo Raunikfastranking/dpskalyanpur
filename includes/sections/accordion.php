@@ -12,7 +12,7 @@
              <div class="bg-[#003618]  rounded-[5px] shadow overflow-hidden ">
                  <button class="w-full flex items-center justify-between px-4 py-3 focus:outline-none heading-btn" aria-expanded="false">
                      <div class="flex items-center gap-3">
-                         <span class="font-medium text-white dps-cms-content"><?= $items['title'] ?? "" ?> </span>
+                         <span class="font-medium text-white dps-cms-content"><?= dps_cms_plain_text($items['title'] ?? "") ?> </span>
                      </div>
                      <svg class="w-6 h-6 transform transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                          <path class="icon-plus" d="M12 5v14M5 12h14" />

@@ -1,7 +1,28 @@
 <?php
 include "includes/apis.php";
-// print_r($testimonial_data['data']['sections'][2]['resolved_content']['media'][0]);
-   $videos = $testimonial_data['data']['sections'][2]['resolved_content']['media'] ?? [];
+
+// Video testimonials: collect from every section — media[] items, video_url field,
+// aur content HTML me pasted YouTube/Vimeo links bhi (CMS jis bhi field me attach kare)
+$videos = [];
+foreach (($testimonial_data['data']['sections'] ?? []) as $sec) {
+    $rc = $sec['resolved_content'] ?? [];
+    foreach (($rc['media'] ?? []) as $m) {
+        if (!empty($m['media_url'])) {
+            $videos[] = $m;
+        } elseif (!empty($m['media_file'])) {
+            $videos[] = ['media_url' => $m['media_file'], 'caption' => $m['caption'] ?? ''];
+        }
+    }
+    if (!empty($rc['video_url'])) {
+        $videos[] = ['media_url' => $rc['video_url'], 'caption' => $rc['title'] ?? ''];
+    }
+    $contentHtml = $sec['content'] ?? '';
+    if (is_string($contentHtml) && preg_match_all('#https?://(?:www\.)?(?:youtube\.com/[^\s"\'<]+|youtu\.be/[A-Za-z0-9_-]+|vimeo\.com/\d+)#i', $contentHtml, $mm)) {
+        foreach ($mm[0] as $u) {
+            $videos[] = ['media_url' => $u, 'caption' => ''];
+        }
+    }
+}
 ?>
 <html lang="en">
 
@@ -185,7 +206,7 @@ include "includes/apis.php";
     <?php include "includes/header.php" ?>
 
     <div class="main relative  mb-[40px] sm:mb-[120px] ">
-        <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px]">
+        <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px] bg-cover bg-no-repeat">
             <div>
                 <h1
                     class="text-[32px] sm:hidden block font-[700] text-white text-left pl-4 mb-5 sm:mb-8 hr-line relative leading-9">
@@ -274,6 +295,9 @@ include "includes/apis.php";
                                         } else {
                                             foreach ($videos as $video) {
                                                 $videoUrl = trim($video["media_url"] ?? '');
+                                                if ($videoUrl !== '' && !preg_match('#^https?://#i', $videoUrl)) {
+                                                    $videoUrl = rtrim($api_url, '/') . '/' . ltrim($videoUrl, '/');
+                                                }
                                                 $embedUrl = "";
                                                 $isFile = false;
 

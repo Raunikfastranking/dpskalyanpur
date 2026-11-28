@@ -11,7 +11,7 @@ include "includes/apis.php";
 <body>
     <?php include "includes/header.php" ?>
 <div class="main relative mb-[120px]">
-    <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px]">
+    <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px] bg-cover bg-no-repeat">
         <div class="w-full">
             <h1 class="text-[32px] sm:hidden block font-[700] text-white text-left pl-4 mb-5 sm:mb-8 hr-line relative leading-9">Assembly</h1>
             <h1 class="sm:text-[32px] sm:block hidden font-[700] text-white text-left sm:mb-1 hr-line relative leading-9 ml-[7rem]">Assembly</h1>

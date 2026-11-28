@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include "includes/apis.php";
 
 // ────────────────────────────────────────────────
@@ -54,13 +54,13 @@ usort($munGalleries, function($a, $b) {
     <?php include "includes/header.php" ?>
 
     <div class="main relative mb-[120px]">
-        <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px]">
+        <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px] bg-cover bg-no-repeat">
             <div class="w-full">
                 <h1 class="text-[32px] sm:hidden block font-[700] text-white text-left pl-4 mb-5 sm:mb-8 hr-line relative leading-9">
-                    <?= htmlspecialchars($mun_data['data']['sections'][0]['content_heading']')) ?>
+                    <?= dps_cms_plain_text(htmlspecialchars($mun_data['data']['sections'][0]['content_heading']'))) ?>
                 </h1>
                 <h1 class="sm:text-[32px] sm:block hidden font-[700] text-white text-left sm:mb-1 hr-line relative leading-9 ml-[7rem]">
-                    <?= htmlspecialchars($mun_data['data']['sections'][0]['content_heading']')) ?>
+                    <?= dps_cms_plain_text(htmlspecialchars($mun_data['data']['sections'][0]['content_heading']'))) ?>
                 </h1>
             </div>
         </div>
@@ -85,7 +85,7 @@ usort($munGalleries, function($a, $b) {
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                         </svg>
                         <a href="mun-gallery" class="ms-1 sm:text-sm text-xs font-medium text-blue-main">
-                            <?= htmlspecialchars($mun_data['data']['sections'][0]['content_heading']')) ?>
+                            <?= dps_cms_plain_text(htmlspecialchars($mun_data['data']['sections'][0]['content_heading']'))) ?>
                         </a>
                     </div>
                 </li>

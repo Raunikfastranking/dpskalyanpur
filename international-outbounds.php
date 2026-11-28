@@ -1,4 +1,4 @@
-﻿<?php
+<?php
  include "includes/apis.php";
 ?>
 <html lang="en">
@@ -17,18 +17,18 @@
     <?php include "includes/header.php" ?>
 
     <div class="main relative">
-        <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px]">
+        <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px] bg-cover bg-no-repeat">
             <div>
                 <h1
                     class="text-[32px] sm:hidden block font-[700] text-white text-left pl-4 mb-5 sm:mb-8 hr-line relative leading-9">
-                   <?= $international_outbounds_data['data']['sections'][0]['content_heading'] ?? "" ?>
+                   <?= dps_cms_plain_text($international_outbounds_data['data']['sections'][0]['content_heading'] ?? "") ?>
                 </h1>
             </div>
 
             <div class="md:w-[100%]">
                 <h1
                     class="sm:text-[32px] sm:block hidden font-[700] text-white text-left sm:mb-1 hr-line relative leading-9 ml-[7rem]">
-                   <?= $international_outbounds_data['data']['sections'][0]['content_heading'] ?? "" ?>
+                   <?= dps_cms_plain_text($international_outbounds_data['data']['sections'][0]['content_heading'] ?? "") ?>
                 </h1>
             </div>
         </div>
@@ -70,7 +70,7 @@
                                 d="m1 9 4-4-4-4"></path>
                         </svg>
                         <a href="international-outbounds"
-                            class="ms-1 text-sm font-medium text-blue-main"> <?= $international_outbounds_data['data']['sections'][0]['content_heading'] ?? "" ?></a>
+                            class="ms-1 text-sm font-medium text-blue-main"> <?= dps_cms_plain_text($international_outbounds_data['data']['sections'][0]['content_heading'] ?? "") ?></a>
                     </div>
                 </li>
             </ol>

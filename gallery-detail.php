@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include "includes/apis.php";
 
 $gallery = null;

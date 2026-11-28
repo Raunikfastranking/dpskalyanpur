@@ -27,7 +27,7 @@
     <div class="main relative mb-[120px] ">
         <div class="main relative  mb-[40px] sm:mb-[120px] ">
 
-            <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px]">
+            <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px] bg-cover bg-no-repeat">
                 <div>
                     <h1 class="text-[32px] sm:hidden block font-[700] text-white text-left pl-4 mb-5 sm:mb-8 hr-line relative leading-9">
                         Debriefing Sessions

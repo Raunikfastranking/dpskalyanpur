@@ -38,7 +38,7 @@ $totalSteps   = count($processItems);
     <?php include "includes/header.php" ?>
 
     <div class="main relative mb-10">
-        <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px]">
+        <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px] bg-cover bg-no-repeat">
             <h1 class="sm:text-[32px] text-[28px] font-[700] text-white text-left ml-4 sm:ml-[7rem] hr-line relative">
                 Process
             </h1>

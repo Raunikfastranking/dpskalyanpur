@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include "includes/apis.php";
 ?>
 <html lang="en">
@@ -35,15 +35,15 @@ include "includes/apis.php";
 
     <div class="main relative">
         <!-- Banner -->
-        <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px]">
+        <div class="bg-[url('assets/images/building.webp')] bg-top flex items-center text-center h-[300px] bg-cover bg-no-repeat">
             <div>
                 <h1 class="text-[32px] sm:hidden block font-[700] text-white text-left pl-4 mb-5 sm:mb-8 hr-line relative leading-9">
-                    <?= $alumni_placements_data['data']['sections'][0]['content_heading'] ?>
+                    <?= dps_cms_plain_text($alumni_placements_data['data']['sections'][0]['content_heading']) ?>
                 </h1>
             </div>
             <div class="md:w-[100%]">
                 <h1 class="sm:text-[32px] sm:block hidden font-[700] text-white text-left sm:mb-1 hr-line relative leading-9 ml-[7rem]">
-                    <?= $alumni_placements_data['data']['sections'][0]['content_heading'] ?>
+                    <?= dps_cms_plain_text($alumni_placements_data['data']['sections'][0]['content_heading']) ?>
                 </h1>
             </div>
         </div>
@@ -64,7 +64,7 @@ include "includes/apis.php";
                     <div class="flex items-center">
                         <svg class="rtl:rotate-180 w-3 h-3 text-blue-main mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" /></svg>
                         <a href="allumni-placement" class="ms-1 sm:text-sm text-xs font-medium text-blue-main">
-                            <?= $alumni_placements_data['data']['sections'][0]['content_heading'] ?>
+                            <?= dps_cms_plain_text($alumni_placements_data['data']['sections'][0]['content_heading']) ?>
                         </a>
                     </div>
                 </li>
